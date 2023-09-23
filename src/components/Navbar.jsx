@@ -1,7 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
+import { deleteCookie } from "cookies-next";
 
 export default function Navbar() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    deleteCookie("accessToken");
+    router.push("/login");
+  };
+
   return (
     <div className="navbar bg-secondary">
       <div className="flex-none">
@@ -49,7 +60,7 @@ export default function Navbar() {
                 <Link href="/shop-details">Shop Details</Link>
               </li>
               <li>
-                <Link href="/logout">Logout</Link>
+                <a onClick={handleLogout}>Logout</a>
               </li>
             </ul>
           </div>
