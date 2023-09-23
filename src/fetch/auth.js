@@ -27,7 +27,6 @@ export const login = async (params) => {
 
 export const register = async (params) => {
   try {
-    console.log(params);
     const response = await fetch(`${BASE_URL}/cms/register`, {
       method: "POST",
       headers: {
