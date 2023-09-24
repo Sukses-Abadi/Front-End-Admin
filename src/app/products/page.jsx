@@ -14,7 +14,7 @@ export default function Page() {
   const [nextPage, setNextPage] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [totalItems, setTotalItems] = useState(null);
-  const itemsPerPage = 1;
+  const itemsPerPage = 2;
   const router = useRouter();
 
   const queryParams = {
@@ -233,7 +233,11 @@ export default function Page() {
                 aria-label="Pagination"
               >
                 <a
-                  onClick={() => setCurrentPage(prevPage)}
+                  onClick={() => {
+                    if (prevPage !== null) {
+                      setCurrentPage(prevPage);
+                    }
+                  }}
                   className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                     prevPage === null ? "opacity-50 cursor-not-allowed" : ""
                   }`}
@@ -263,7 +267,9 @@ export default function Page() {
                 )}
                 <a
                   onClick={() => {
-                    setCurrentPage(nextPage);
+                    if (nextPage !== null) {
+                      setCurrentPage(nextPage);
+                    }
                   }}
                   className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                     nextPage === null ? "opacity-50 cursor-not-allowed" : ""
