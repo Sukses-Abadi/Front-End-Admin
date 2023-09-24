@@ -81,7 +81,10 @@ export default function Page() {
 
   const generatePageNumbers = (totalPages) => {
     const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
+    const startPage = Math.max(1, currentPage - 1);
+    const endPage = Math.min(totalPages, currentPage + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
 
@@ -238,24 +241,26 @@ export default function Page() {
                   <span className="sr-only">Previous</span>
                   <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
                 </a>
-                {generatePageNumbers(totalPages).map((pageNumber) => (
-                  <a
-                    key={pageNumber}
-                    aria-current={
-                      currentPage === pageNumber ? "page" : undefined
-                    }
-                    className={`relative z-10 inline-flex items-center px-4 py-2 text-xs font-semibold ${
-                      currentPage === pageNumber
-                        ? "bg-secondary text-white"
-                        : "text-gray-900 hover:bg-gray-50"
-                    } ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0`}
-                    onClick={() => {
-                      setCurrentPage(pageNumber);
-                    }}
-                  >
-                    {pageNumber}
-                  </a>
-                ))}
+                {generatePageNumbers(totalPages, currentPage).map(
+                  (pageNumber) => (
+                    <a
+                      key={pageNumber}
+                      aria-current={
+                        currentPage === pageNumber ? "page" : undefined
+                      }
+                      className={`relative z-10 inline-flex items-center px-4 py-2 text-xs font-semibold ${
+                        currentPage === pageNumber
+                          ? "bg-secondary text-white"
+                          : "text-gray-900 hover:bg-gray-50"
+                      } ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0`}
+                      onClick={() => {
+                        setCurrentPage(pageNumber);
+                      }}
+                    >
+                      {pageNumber}
+                    </a>
+                  )
+                )}
                 <a
                   onClick={() => {
                     setCurrentPage(nextPage);
