@@ -1,11 +1,8 @@
-// SHOULD BE DELETED LATER
-import accessToken from "@/lib/token";
-
 import BASE_URL from "@/lib/baseUrl";
+import { getCookie } from "cookies-next";
 
 export const getAllProducts = async (queryParams) => {
-  // SHOULD BE DELETED LATER
-  const token = accessToken;
+  const token = getCookie("accessToken");
 
   const filteredQueryParams = Object.fromEntries(
     Object.entries(queryParams).filter(([ind, value]) => value !== null)

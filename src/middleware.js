@@ -21,6 +21,7 @@ export const config = {
     "/shop-details",
     "/category",
     "/category/:path*",
+    "/products/:path*",
     "/logout",
   ],
 };
