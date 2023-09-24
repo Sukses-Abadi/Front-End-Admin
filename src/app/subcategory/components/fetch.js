@@ -1,9 +1,9 @@
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 
 export const getAllSubCategories = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/cms/subcategory`, {
+    const res = await fetch(`${BASE_URL}/cms/subcategory`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

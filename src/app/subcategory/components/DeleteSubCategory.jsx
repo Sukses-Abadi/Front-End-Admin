@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 import Swal from "sweetalert2";
 
@@ -18,7 +18,7 @@ export default function DeleteSubCategory({ subCategories }) {
   const handleDelete = async (subCategoriesId) => {
     try {
       const responseData = await fetch(
-        `${baseUrl}/api/cms/subcategory/${subCategoriesId}`,
+        `${BASE_URL}/cms/subcategory/${subCategoriesId}`,
         {
           method: "DELETE",
           headers: {

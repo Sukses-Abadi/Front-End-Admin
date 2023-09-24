@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 import Swal from "sweetalert2";
 import { validateName } from "./fetch";
@@ -32,7 +32,7 @@ export default function UpdateSubCategory({ subCategories, categories }) {
       }
       let payload = { name, category_id: categoryId };
       const responseData = await fetch(
-        `${baseUrl}/api/cms/subcategory/${subCategories.id}`,
+        `${BASE_URL}/cms/subcategory/${subCategories.id}`,
         {
           method: "PUT",
           headers: {

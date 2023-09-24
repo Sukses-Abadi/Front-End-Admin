@@ -1,5 +1,5 @@
 "use client";
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,7 +36,7 @@ export default function UpdateBankAccount({ bankAccount }) {
         account_number: accountNumber,
       };
       const responseData = await fetch(
-        `${baseUrl}/api/cms/bank-accounts/${bankAccount.id}`,
+        `${BASE_URL}/cms/bank-accounts/${bankAccount.id}`,
         {
           method: "PUT",
           headers: {

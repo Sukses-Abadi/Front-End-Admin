@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 import { BankName, validateAccountNumber } from "./fetch";
 import Swal from "sweetalert2";
@@ -37,7 +37,7 @@ export default function AddBankAccount() {
         bank_name: bankName,
         account_number: accountNumber,
       };
-      const responseData = await fetch(`${baseUrl}/api/cms/bank-accounts`, {
+      const responseData = await fetch(`${BASE_URL}/cms/bank-accounts`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

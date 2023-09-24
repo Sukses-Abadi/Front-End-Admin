@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 import Swal from "sweetalert2";
 import { validateName } from "./fetch";
@@ -32,7 +32,7 @@ export default function AddCategory() {
       const payload = {
         name: name,
       };
-      const responseData = await fetch(`${baseUrl}/api/cms/category`, {
+      const responseData = await fetch(`${BASE_URL}/cms/category`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,5 +1,5 @@
 "use client";
-import { baseUrl } from "@/lib/baseUrl";
+import BASE_URL from "@/lib/baseUrl";
 import { token } from "@/lib/token";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export default function DeleteBankAccount({ bankAccount }) {
   const handleDelete = async (bankAccountId) => {
     try {
       const responseData = await fetch(
-        `${baseUrl}/api/cms/bank-accounts/${bankAccountId}`,
+        `${BASE_URL}/cms/bank-accounts/${bankAccountId}`,
         {
           method: "DELETE",
           headers: {
