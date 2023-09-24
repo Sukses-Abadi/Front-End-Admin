@@ -14,5 +14,5 @@ export function middleware(request) {
 
 // determines which path the middleware will implement
 export const config = {
-  matcher: ["/", "/login", "/register"],
+  matcher: ["/", "/login", "/register", "/products"],
 };
