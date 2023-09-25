@@ -1,9 +1,9 @@
 import BASE_URL from "@/lib/baseUrl";
 import { getCookie } from "cookies-next";
 
-export const getAllProducts = async (queryParams) => {
-  const token = getCookie("accessToken");
+const token = getCookie("accessToken");
 
+export const getAllProducts = async (queryParams) => {
   const filteredQueryParams = Object.fromEntries(
     Object.entries(queryParams).filter(([ind, value]) => value !== null)
   );
@@ -16,6 +16,27 @@ export const getAllProducts = async (queryParams) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    const { data } = await response.json();
+
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const deleteProduct = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/cms/products/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status >= 400) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    
     const { data } = await response.json();
 
     return data;
