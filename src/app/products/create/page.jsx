@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { getAllCategory } from "@/fetch/categories";
 import { useEffect, useState } from "react";
 
@@ -113,6 +114,17 @@ export default function Page() {
     fetchCategories();
   }, []);
 
+=======
+export default function Page() {
+  const handleSubmit = async () => {
+    try {
+      console.log("HOLA AMIGOS");
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+>>>>>>> aa10577 (create add product form)
   return (
     <div className="max-w-2xl mx-auto mt-5">
       <div className="bg-white rounded-2xl shadow-lg">
@@ -165,6 +177,7 @@ export default function Page() {
                   name="category"
                   id="category"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
+<<<<<<< HEAD
                   onChange={handleCategoryChange}
                   required
                 >
@@ -175,6 +188,14 @@ export default function Page() {
                       </option>
                     );
                   })}
+=======
+                  required
+                >
+                  <option value="Top">Top</option>
+                  <option value="Bottom">Bottom</option>
+                  <option value="Outerwear">Outerwear</option>
+                  {/* Add more options as needed */}
+>>>>>>> aa10577 (create add product form)
                 </select>
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -190,6 +211,7 @@ export default function Page() {
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   required
                 >
+<<<<<<< HEAD
                   {categories
                     .find((category) => category.name === selectedCategory)
                     ?.SubCategory.map((subCategory) => {
@@ -204,6 +226,14 @@ export default function Page() {
                   </option>
                   <option value="Jeans">Jeans</option>
                   <option value="Jacket">Jacket</option> */}
+=======
+                  <option value="T-shirt Long Sleeve">
+                    T-shirt Long Sleeve
+                  </option>
+                  <option value="Jeans">Jeans</option>
+                  <option value="Jacket">Jacket</option>
+                  {/* Add more options as needed */}
+>>>>>>> aa10577 (create add product form)
                 </select>
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -299,6 +329,7 @@ export default function Page() {
                     <tbody>
                       <tr>
                         <td>
+<<<<<<< HEAD
                           <input
                             type="text"
                             name="color"
@@ -307,6 +338,20 @@ export default function Page() {
                             placeholder="Black"
                             required
                           />
+=======
+                          <select
+                            name="color"
+                            id="color"
+                            className="w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
+                            required
+                          >
+                            <option value="Black">Black</option>
+                            <option value="White">White</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Red">Red</option>
+                            <option value="Green">Green</option>
+                          </select>
+>>>>>>> aa10577 (create add product form)
                         </td>
                         <td>
                           <select
@@ -346,6 +391,7 @@ export default function Page() {
                         <td className="text-center">
                           <button
                             type="button"
+<<<<<<< HEAD
                             className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
                             onClick={() => {
                               setProductDetails((prevDetails) => [
@@ -358,6 +404,9 @@ export default function Page() {
                                 },
                               ]);
                             }}
+=======
+                            className="text-white font-medium text-sm px-2.5 py-1 text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+>>>>>>> aa10577 (create add product form)
                           >
                             +
                           </button>
@@ -391,12 +440,17 @@ export default function Page() {
                       ></path>
                     </svg>
                     <p className="py-1 text-sm text-gray-600">
+<<<<<<< HEAD
                       Select an image to upload
+=======
+                      Upload a file or drag and drop
+>>>>>>> aa10577 (create add product form)
                     </p>
                     <p className="text-xs text-gray-500">
                       PNG, JPG, GIF up to 10MB
                     </p>
                   </div>
+<<<<<<< HEAD
                   <input
                     key={imagePreview.length}
                     type="file"
@@ -414,6 +468,10 @@ export default function Page() {
                     {uploadError}
                   </div>
                 )}
+=======
+                  <input type="file" className="hidden" />
+                </label>
+>>>>>>> aa10577 (create add product form)
               </div>
             </div>
           </form>
