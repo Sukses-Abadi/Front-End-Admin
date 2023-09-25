@@ -123,11 +123,6 @@ export default function Page() {
     });
   };
 
-  useEffect(() => {
-    fetchProducts(queryParams);
-    setSelectedCheckboxes({});
-  }, [currentPage]);
-
   const handleKeywords = (keywords) => {
     const result = keywords.split(",").map((keyword) => {
       return keyword.trim();
@@ -170,10 +165,15 @@ export default function Page() {
     return pageNumbers;
   };
 
+  useEffect(() => {
+    fetchProducts(queryParams);
+    setSelectedCheckboxes({});
+  }, [currentPage]);
+
   return (
     <div className="max-w-7xl mx-auto mt-5">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div className="p-4 flex items-center">
+      <div className="relative shadow-md sm:rounded-lg">
+        <div className="p-4 flex flex-col sm:flex-row items-start">
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
@@ -195,139 +195,165 @@ export default function Page() {
             <input
               type="text"
               id="table-search"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg shadow-md focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search for items"
             />
           </div>
-          {Object.values(selectedCheckboxes).some((isChecked) => isChecked) && (
+          <div className="flex items-center mt-3 sm:mt-1 w-full">
             <button
               type="button"
-              data-modal-toggle="delete-product-modal"
-              className="inline-flex items-center ml-5 py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
-              onClick={handleDeleteProducts}
+              data-modal-toggle="add-product-modal"
+              className="inline-flex items-center ml-0 sm:ml-5 py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-orange-300 to-accent rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+              onClick={() => router.push("/products/create")}
             >
               <svg
-                className="mr-2 w-5 h-5"
+                className="mr-2 w-5 h-6"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   fillRule="evenodd"
-                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                   clipRule="evenodd"
                 ></path>
               </svg>
-              Delete
+              Add product
             </button>
-          )}
+            {Object.values(selectedCheckboxes).some(
+              (isChecked) => isChecked
+            ) && (
+              <button
+                type="button"
+                data-modal-toggle="delete-product-modal"
+                className="inline-flex items-center ml-2 sm:ml-auto py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+                onClick={handleDeleteProducts}
+              >
+                <svg
+                  className="mr-2 w-5 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Delete
+              </button>
+            )}
+          </div>
         </div>
-        <table className="table">
-          <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th>
-                <label>
-                  <input
-                    type="checkbox"
-                    className="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAll}
-                  />
-                </label>
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                SKU
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Keyword
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Sub Category
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Discount
-              </th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => {
-              return (
-                <tr key={product.id}>
-                  <th>
-                    <label>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        checked={selectedCheckboxes[product.id] || false}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, product.id)
-                        }
-                      />
-                    </label>
-                  </th>
-                  <td scope="row" className="px-6 whitespace-nowrap">
-                    <div className="font-bold">{product.name}</div>
-                  </td>
-                  <td className="px-6 whitespace-nowrap">{product.SKU}</td>
-                  <td className="px-6">
-                    {handleKeywords(product.keyword).map((item, index) => {
-                      return (
-                        <span
-                          key={index}
-                          className="badge badge-ghost badge-sm whitespace-nowrap"
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                    />
+                  </label>
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  SKU
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Keyword
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Category
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Sub Category
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Discount
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => {
+                return (
+                  <tr key={product.id}>
+                    <th>
+                      <label>
+                        <input
+                          type="checkbox"
+                          className="checkbox"
+                          checked={selectedCheckboxes[product.id] || false}
+                          onChange={(event) =>
+                            handleCheckboxChange(event, product.id)
+                          }
+                        />
+                      </label>
+                    </th>
+                    <td scope="row" className="px-6 whitespace-nowrap">
+                      <div className="font-bold">{product.name}</div>
+                    </td>
+                    <td className="px-6 whitespace-nowrap">{product.SKU}</td>
+                    <td className="px-6">
+                      {handleKeywords(product.keyword).map((item, index) => {
+                        return (
+                          <span
+                            key={index}
+                            className="badge badge-ghost badge-sm whitespace-nowrap"
+                          >
+                            {item}
+                          </span>
+                        );
+                      })}
+                    </td>
+                    <td className="px-6 whitespace-nowrap">
+                      {product.categoryName}
+                    </td>
+                    <td className="px-6 whitespace-nowrap">
+                      {product.subCategoryName}
+                    </td>
+                    <td className="px-6 border-b border-blue-gray-50">
+                      {product.discount === null ? (
+                        <div
+                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-gray-600 to-gray-500 text-white py-0.5 px-2 text-[11px] font-medium"
+                          data-projection-id="9"
+                          style={{ opacity: 1 }}
                         >
-                          {item}
-                        </span>
-                      );
-                    })}
-                  </td>
-                  <td className="px-6 whitespace-nowrap">
-                    {product.categoryName}
-                  </td>
-                  <td className="px-6 whitespace-nowrap">
-                    {product.subCategoryName}
-                  </td>
-                  <td className="px-6 border-b border-blue-gray-50">
-                    {product.discount === null ? (
-                      <div
-                        className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-gray-600 to-gray-500 text-white py-0.5 px-2 text-[11px] font-medium"
-                        data-projection-id="9"
-                        style={{ opacity: 1 }}
+                          <div className="mt-px">inactive</div>
+                        </div>
+                      ) : (
+                        <div
+                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-green-600 to-green-400 text-white py-0.5 px-2 text-[11px] font-medium"
+                          data-projection-id="8"
+                          style={{ opacity: 1 }}
+                        >
+                          <div className="mt-px">active</div>
+                        </div>
+                      )}
+                    </td>
+                    <th className="px-6 py-4">
+                      <button
+                        className="btn btn-ghost btn-xs"
+                        onClick={() => {
+                          router.push(`/products/${product.id}`);
+                        }}
                       >
-                        <div className="mt-px">inactive</div>
-                      </div>
-                    ) : (
-                      <div
-                        className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-green-600 to-green-400 text-white py-0.5 px-2 text-[11px] font-medium"
-                        data-projection-id="8"
-                        style={{ opacity: 1 }}
-                      >
-                        <div className="mt-px">active</div>
-                      </div>
-                    )}
-                  </td>
-                  <th className="px-6 py-4">
-                    <button
-                      className="btn btn-ghost btn-xs"
-                      onClick={() => {
-                        router.push(`/products/${product.id}`);
-                      }}
-                    >
-                      details
-                    </button>
-                  </th>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                        details
+                      </button>
+                    </th>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         {/* CODE FOR PAGINATION!!! */}
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
