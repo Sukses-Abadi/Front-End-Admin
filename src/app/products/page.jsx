@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 
 export default function Page() {
   const [products, setProducts] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(null);
@@ -99,6 +100,7 @@ export default function Page() {
           delete updatedCheckboxState[productId];
         }
         setSelectedCheckboxes(updatedCheckboxState);
+        setSelectAll(false);
 
         let informationMessage =
           successfulDeletions.length > 0
@@ -134,10 +136,25 @@ export default function Page() {
     return result;
   };
 
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+
+    const updatedSelections = {};
+    products.forEach((product) => {
+      updatedSelections[product.id] = !selectAll;
+    });
+    setSelectedCheckboxes(updatedSelections);
+  };
+
   const handleCheckboxChange = (event, productId) => {
     const updatedSelections = { ...selectedCheckboxes };
     updatedSelections[productId] = event.target.checked;
     setSelectedCheckboxes(updatedSelections);
+
+    const allChecked = products.every(
+      (product) => updatedSelections[product.id]
+    );
+    setSelectAll(allChecked);
   };
 
   const generatePageNumbers = (totalPages, currentPage) => {
@@ -208,7 +225,16 @@ export default function Page() {
         <table className="table">
           <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th></th>
+              <th>
+                <label>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                  />
+                </label>
+              </th>
               <th scope="col" className="px-6 py-3">
                 Name
               </th>
@@ -239,6 +265,7 @@ export default function Page() {
                       <input
                         type="checkbox"
                         className="checkbox"
+                        checked={selectedCheckboxes[product.id] || false}
                         onChange={(event) =>
                           handleCheckboxChange(event, product.id)
                         }
