@@ -1,14 +1,16 @@
 "use client";
 
 import { getOneCategory } from "@/fetch/categories";
-import { getAllProducts } from "@/fetch/products";
+import { deleteProduct, getAllProducts } from "@/fetch/products";
 import { getOneSubCategory } from "@/fetch/subCategories";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import Swal from "sweetalert2";
 
 export default function Page() {
   const [products, setProducts] = useState([]);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(null);
   const [nextPage, setNextPage] = useState(null);
@@ -67,8 +69,61 @@ export default function Page() {
     }
   };
 
+  const handleDeleteProducts = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d80032",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const deletedProducts = Object.keys(selectedCheckboxes).filter(
+          (key) => selectedCheckboxes[key] === true
+        );
+        let successfulDeletions = [];
+
+        for (const productId of deletedProducts) {
+          try {
+            await deleteProduct(productId);
+            successfulDeletions.push(productId);
+          } catch (error) {
+            console.log(`Failed to delete product with ID ${productId}`);
+          }
+        }
+
+        const updatedCheckboxState = { ...selectedCheckboxes };
+        for (const productId of successfulDeletions) {
+          delete updatedCheckboxState[productId];
+        }
+        setSelectedCheckboxes(updatedCheckboxState);
+
+        let informationMessage =
+          successfulDeletions.length > 0
+            ? `Successfully deleted ${successfulDeletions.length} product(s).`
+            : "No products were deleted.";
+
+        Swal.fire({
+          icon: "info",
+          title:
+            successfulDeletions.length > 0
+              ? "Product(s) Deleted Successfully"
+              : "Deletion Failed",
+          text: informationMessage,
+          showConfirmButton: false,
+          showCloseButton: true,
+        });
+
+        fetchProducts(queryParams);
+      }
+    });
+  };
+
   useEffect(() => {
     fetchProducts(queryParams);
+    setSelectedCheckboxes({});
   }, [currentPage]);
 
   const handleKeywords = (keywords) => {
@@ -79,13 +134,20 @@ export default function Page() {
     return result;
   };
 
-  const generatePageNumbers = (totalPages) => {
-    const pageNumbers = [];
-    const startPage = Math.max(1, currentPage - 1);
-    const endPage = Math.min(totalPages, currentPage + 1);
+  const handleCheckboxChange = (event, productId) => {
+    const updatedSelections = { ...selectedCheckboxes };
+    updatedSelections[productId] = event.target.checked;
+    setSelectedCheckboxes(updatedSelections);
+  };
 
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
+  const generatePageNumbers = (totalPages, currentPage) => {
+    const pageNumbers = [];
+    const middlePage = Math.min(Math.max(2, currentPage), totalPages - 1);
+
+    for (let i = middlePage - 1; i <= middlePage + 1; i++) {
+      if (i > 0 && i <= totalPages) {
+        pageNumbers.push(i);
+      }
     }
 
     return pageNumbers;
@@ -94,7 +156,7 @@ export default function Page() {
   return (
     <div className="max-w-7xl mx-auto mt-5">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div className="p-4">
+        <div className="p-4 flex items-center">
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
@@ -120,6 +182,28 @@ export default function Page() {
               placeholder="Search for items"
             />
           </div>
+          {Object.values(selectedCheckboxes).some((isChecked) => isChecked) && (
+            <button
+              type="button"
+              data-modal-toggle="delete-product-modal"
+              className="inline-flex items-center ml-5 py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+              onClick={handleDeleteProducts}
+            >
+              <svg
+                className="mr-2 w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+              Delete
+            </button>
+          )}
         </div>
         <table className="table">
           <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -152,7 +236,13 @@ export default function Page() {
                 <tr key={product.id}>
                   <th>
                     <label>
-                      <input type="checkbox" className="checkbox" />
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        onChange={(event) =>
+                          handleCheckboxChange(event, product.id)
+                        }
+                      />
                     </label>
                   </th>
                   <td scope="row" className="px-6 whitespace-nowrap">
