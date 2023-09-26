@@ -1,10 +1,5 @@
-// import Image from "next/image";
-// import { getCookie, setCookie} from "cookies-next";
-import {cookies} from 'next/headers'
+import Image from "next/image";
 
 export default function Home() {
- 
-  const cookie = cookies().get("accessToken")
-
-  return <main className=" bg-base-100 text-6xl">{cookie.value}!</main>;
+  return <main className=" bg-base-100 text-6xl">HOMEPAGE!</main>;
 }
