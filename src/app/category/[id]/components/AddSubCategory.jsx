@@ -1,16 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BASE_URL from "@/lib/baseUrl";
-import { token } from "@/lib/token";
+import { getCookie } from "cookies-next";
 import Swal from "sweetalert2";
 import { validateName } from "./fetch";
 
 export default function AddSubCategory({ categories }) {
   const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryId, setCategoryId] = useState(categories.data[0].id);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const token = getCookie("accessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);
@@ -19,7 +20,7 @@ export default function AddSubCategory({ categories }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const existName = await validateName();
+      const existName = await validateName(token);
       if (existName.includes(name)) {
         return Swal.fire({
           icon: "error",
@@ -60,9 +61,9 @@ export default function AddSubCategory({ categories }) {
     }
   };
   return (
-    <div>
+    <div className="flex justify-center sm:justify-end">
       <button
-        className="btn btn-md btn-primary float-right mb-5 "
+        className="btn btn-sm btn-outline btn-primary mb-5 sm:btn-md"
         onClick={handleModal}
       >
         Add New Sub-Category
@@ -75,14 +76,14 @@ export default function AddSubCategory({ categories }) {
               <label className="label font-bold">Name</label>
               <input
                 type="text"
-                className="input input-bordered"
+                className="input input-sm input-bordered sm:input-md"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <label className="label font-bold">category_id</label>
               <select
-                className="select select-bordered "
+                className="select select-sm sm:select-md select-bordered"
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
                 required
@@ -96,10 +97,17 @@ export default function AddSubCategory({ categories }) {
               </select>
             </div>
             <div className="modal-action">
-              <button type="button" className="btn" onClick={handleModal}>
+              <button
+                type="button"
+                className="btn btn-sm sm:btn-md"
+                onClick={handleModal}
+              >
                 Close
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-sm sm:btn-md btn-primary btn-outline"
+              >
                 Submit
               </button>
             </div>

@@ -1,11 +1,16 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Details({ category }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const handleModal = () => {
     setIsOpen(!isOpen);
+  };
+  const handleSubCategory = () => {
+    router.push(`/category/${category.id}`);
   };
 
   const categoryId =
@@ -15,7 +20,10 @@ export default function Details({ category }) {
 
   return (
     <div>
-      <button className="btn btn-sm btn-info" onClick={handleModal}>
+      <button
+        className="btn btn-xs btn-outline sm:btn-sm btn-info"
+        onClick={handleModal}
+      >
         Show
       </button>
       <div className={isOpen ? "modal modal-open" : "modal"}>
@@ -46,13 +54,22 @@ export default function Details({ category }) {
               </div>
             </>
           ) : null}
-          <button
-            type="button"
-            className="btn btn-md float-right mt-5"
-            onClick={handleModal}
-          >
-            Close
-          </button>
+          <div className="modal-action">
+            <button
+              type="button"
+              className="btn btn-sm sm:btn-md"
+              onClick={handleModal}
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm sm:btn-md btn-primary"
+              onClick={handleSubCategory}
+            >
+              Edit
+            </button>
+          </div>
         </div>
       </div>
     </div>

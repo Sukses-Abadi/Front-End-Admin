@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BASE_URL from "@/lib/baseUrl";
-import { token } from "@/lib/token";
+import { getCookie } from "cookies-next";
 import { validateName } from "./fetch";
 import Swal from "sweetalert2";
 
@@ -11,6 +11,7 @@ export default function UpdateCategory({ category }) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
 
+  const token = getCookie("accessToken");
   const router = useRouter();
 
   const handleModal = () => {
@@ -20,7 +21,7 @@ export default function UpdateCategory({ category }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const existName = await validateName();
+      const existName = await validateName(token);
       if (existName.includes(name)) {
         return Swal.fire({
           icon: "error",
@@ -62,7 +63,10 @@ export default function UpdateCategory({ category }) {
   };
   return (
     <div>
-      <button className="btn btn-sm btn-primary" onClick={handleModal}>
+      <button
+        className="btn btn-xs btn-outline sm:btn-sm btn-primary"
+        onClick={handleModal}
+      >
         Edit
       </button>
       <div className={isOpen ? "modal modal-open" : "modal"}>
@@ -74,19 +78,22 @@ export default function UpdateCategory({ category }) {
               <input
                 type="text"
                 required
-                className="input input-bordered"
+                className="input input-sm input-bordered sm:input-md"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <div className="modal-action">
                 <button
                   type="button"
-                  className="btn btn-md"
+                  className="btn btn-sm sm:btn-md"
                   onClick={handleModal}
                 >
                   Close
                 </button>
-                <button type="submit" className="btn btn-md btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-sm sm:btn-md btn-primary btn-outline"
+                >
                   Update
                 </button>
               </div>

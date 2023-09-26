@@ -57,9 +57,6 @@ export default function Navbar() {
                 <Link href="/category">Category</Link>
               </li>
               <li>
-                <Link href="/subcategory">Sub Category</Link>
-              </li>
-              <li>
                 <Link href="/shop-details">Shop Details</Link>
               </li>
               <li>

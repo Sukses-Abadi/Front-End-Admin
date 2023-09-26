@@ -4,7 +4,7 @@ import UpdateBankAccount from "./UpdateBankAccount";
 const BankAccount = ({ bankAccount, index }) => {
   return (
     <>
-      <td>{index + 1} </td>
+      <td className="hidden sm:block">{index + 1} </td>
       <td>{bankAccount.account_holder} </td>
       <td>{bankAccount.bank_name} </td>
       <td>{bankAccount.account_number} </td>

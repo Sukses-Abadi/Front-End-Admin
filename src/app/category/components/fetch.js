@@ -1,14 +1,7 @@
 import BASE_URL from "@/lib/baseUrl";
-import { getCookie } from "cookies-next";
-import Cookies from "js-cookie";
-// import token from "@/lib/token";
 
-export const getAllCategories = async () => {
+export const getAllCategories = async (token) => {
   try {
-    // const data = token();
-    // const token = getCookie("accessToken")
-    const token = Cookies.get("accessToken")
-    console.log(token, "<<<<<<<<<<<<<<<<<<<<<<<<<,,,")
     const res = await fetch(`${BASE_URL}/cms/category`, {
       method: "GET",
       headers: {
@@ -23,9 +16,9 @@ export const getAllCategories = async () => {
   }
 };
 
-export const validateName = async () => {
+export const validateName = async (token) => {
   try {
-    const result = await getAllCategories();
+    const result = await getAllCategories(token);
     const allName = result.data.map((name) => name.name);
     return allName;
   } catch (error) {

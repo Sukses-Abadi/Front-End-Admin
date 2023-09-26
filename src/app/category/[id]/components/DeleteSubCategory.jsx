@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BASE_URL from "@/lib/baseUrl";
-import { token } from "@/lib/token";
+import { getCookie } from "cookies-next";
 import Swal from "sweetalert2";
 
 export default function DeleteSubCategory({ subCategories }) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const token = getCookie("accessToken");
   const router = useRouter();
 
   const handleModal = () => {
@@ -45,7 +45,10 @@ export default function DeleteSubCategory({ subCategories }) {
   };
   return (
     <div>
-      <button className="btn btn-sm btn-error ml-3" onClick={handleModal}>
+      <button
+        className="btn btn-xs btn-outline sm:btn-sm btn-error ml-3"
+        onClick={handleModal}
+      >
         Delete
       </button>
       <div className={isOpen ? "modal modal-open" : "modal"}>
@@ -55,12 +58,16 @@ export default function DeleteSubCategory({ subCategories }) {
           </h3>
           <form onSubmit={handleDelete}>
             <div className="modal-action">
-              <button type="button" className="btn" onClick={handleModal}>
+              <button
+                type="button"
+                className="btn btn-sm sm:btn-md"
+                onClick={handleModal}
+              >
                 No
               </button>
               <button
                 type="button"
-                className="btn btn-error"
+                className="btn btn-sm sm:btn-md btn-error"
                 onClick={() => handleDelete(subCategories.id)}
               >
                 Yes

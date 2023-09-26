@@ -1,7 +1,6 @@
 import BASE_URL from "@/lib/baseUrl";
-import { token } from "@/lib/token";
 
-export const getAllBankAccount = async () => {
+export const getAllBankAccount = async (token) => {
   try {
     const res = await fetch(`${BASE_URL}/cms/bank-accounts`, {
       method: "GET",
@@ -27,9 +26,9 @@ export const BankName = [
   "SeaBank",
 ];
 
-export const validateAccountNumber = async () => {
+export const validateAccountNumber = async (token) => {
   try {
-    const result = await getAllBankAccount();
+    const result = await getAllBankAccount(token);
     const accountNumber = result.data.map((accNum) => accNum.account_number);
     return accountNumber;
   } catch (error) {

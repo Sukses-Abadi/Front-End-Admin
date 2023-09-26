@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BASE_URL from "@/lib/baseUrl";
-import { token } from "@/lib/token";
+import { getCookie } from "cookies-next";
 import { BankName, validateAccountNumber } from "./fetch";
 import Swal from "sweetalert2";
 
@@ -13,6 +13,7 @@ export default function AddBankAccount() {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
+  const token = getCookie("accessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);
@@ -21,7 +22,7 @@ export default function AddBankAccount() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const existingAccNum = await validateAccountNumber();
+      const existingAccNum = await validateAccountNumber(token);
       if (existingAccNum.includes(accountNumber)) {
         return Swal.fire({
           icon: "error",
@@ -46,6 +47,14 @@ export default function AddBankAccount() {
         body: JSON.stringify(payload),
         cache: "no-store",
       });
+
+      // if (responseData.error === "Unauthorized" || response.status === 401) {
+      //   alert("Authorization not valid, redicting to login page");
+      //   deleteCookie("accessToken");
+      //   router.push("/login")
+      //   return;
+      // }
+
       const response = await responseData.json();
 
       Swal.fire({
@@ -63,9 +72,9 @@ export default function AddBankAccount() {
     }
   };
   return (
-    <div>
+    <div className="flex justify-center sm:justify-end">
       <button
-        className="btn btn-md btn-primary float-right mb-5 "
+        className="btn btn-sm btn-outline btn-primary mb-5 sm:btn-md"
         onClick={handleModal}
       >
         Add New Bank Account
@@ -79,13 +88,13 @@ export default function AddBankAccount() {
               <input
                 required
                 type="text"
-                className="input input-bordered"
+                className="input input-sm input-bordered sm:input-md"
                 value={accountHolder}
                 onChange={(e) => setAccountHolder(e.target.value)}
               />
               <label className="label font-bold">Bank</label>
               <select
-                className="select select-bordered"
+                className="select select-sm sm:select-md select-bordered"
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
                 required
@@ -101,16 +110,23 @@ export default function AddBankAccount() {
               <input
                 required
                 type="text"
-                className="input input-bordered"
+                className="input input-sm input-bordered sm:input-md"
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
               />
             </div>
             <div className="modal-action">
-              <button type="button" className="btn" onClick={handleModal}>
+              <button
+                type="button"
+                className="btn btn-sm sm:btn-md"
+                onClick={handleModal}
+              >
                 Close
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-sm sm:btn-md btn-primary"
+              >
                 Submit
               </button>
             </div>

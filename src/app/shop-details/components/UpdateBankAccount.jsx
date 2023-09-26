@@ -1,6 +1,6 @@
 "use client";
 import BASE_URL from "@/lib/baseUrl";
-import { token } from "@/lib/token";
+import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { validateAccountNumber, BankName } from "./fetch";
@@ -12,6 +12,7 @@ export default function UpdateBankAccount({ bankAccount }) {
   const [accountNumber, setAccountNumber] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const token = getCookie("accessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);
@@ -20,7 +21,7 @@ export default function UpdateBankAccount({ bankAccount }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const existingAccNum = await validateAccountNumber();
+      const existingAccNum = await validateAccountNumber(token);
       if (existingAccNum.includes(accountNumber)) {
         return Swal.fire({
           icon: "error",
@@ -64,7 +65,10 @@ export default function UpdateBankAccount({ bankAccount }) {
 
   return (
     <div>
-      <button className="btn btn-sm btn-primary" onClick={handleModal}>
+      <button
+        className="btn btn-xs sm:btn-sm btn-primary btn-outline"
+        onClick={handleModal}
+      >
         Edit
       </button>
       <div className={isOpen ? "modal modal-open" : "modal"}>
@@ -78,13 +82,13 @@ export default function UpdateBankAccount({ bankAccount }) {
               <input
                 required
                 type="text"
-                className="input input-bordered"
+                className="input input-sm input-bordered sm:input-md"
                 value={accountHolder}
                 onChange={(e) => setAccountHolder(e.target.value)}
               />
               <label className="label font-bold">Bank</label>
               <select
-                className="select select-bordered"
+                className="select select-sm sm:select-md select-bordered"
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
                 required
@@ -100,19 +104,22 @@ export default function UpdateBankAccount({ bankAccount }) {
               <input
                 required
                 type="text"
-                className="input input-bordered"
+                className="input input-sm input-bordered sm:input-md"
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
               />
               <div className="modal-action">
                 <button
                   type="button"
-                  className="btn btin-md"
+                  className="btn btn-sm sm:btn-md"
                   onClick={handleModal}
                 >
                   Close
                 </button>
-                <button type="submit" className="btn btn-md btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-sm sm:btn-md btn-primary"
+                >
                   Update
                 </button>
               </div>

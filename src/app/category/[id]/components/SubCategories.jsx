@@ -4,9 +4,8 @@ import UpdateSubCategory from "./UpdateSubCategory";
 const SubCategories = ({ subCategories, index, categories }) => {
   return (
     <tr key={index}>
-      <td>{index + 1}</td>
+      <td className="hidden sm:block">{index + 1}</td>
       <td>{subCategories.name}</td>
-      <td>{subCategories.category_id}</td>
       <td className="flex">
         <UpdateSubCategory
           subCategories={subCategories}
