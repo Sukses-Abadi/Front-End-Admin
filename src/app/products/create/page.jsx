@@ -1,6 +1,29 @@
 "use client";
 
+import { getAllCategory } from "@/fetch/categories";
+import { useEffect, useState } from "react";
+
 export default function Page() {
+  const [productName, setProductName] = useState("");
+  const [sku, setSku] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getAllCategory();
+
+      setCategories(response);
+      setSelectedCategory(response[0].name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
   const handleSubmit = async () => {
     try {
       console.log("HOLA AMIGOS");
@@ -8,6 +31,10 @@ export default function Page() {
       console.log("Error:", error);
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <div className="max-w-2xl mx-auto mt-5">
@@ -61,12 +88,16 @@ export default function Page() {
                   name="category"
                   id="category"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
+                  onChange={handleCategoryChange}
                   required
                 >
-                  <option value="Top">Top</option>
-                  <option value="Bottom">Bottom</option>
-                  <option value="Outerwear">Outerwear</option>
-                  {/* Add more options as needed */}
+                  {categories.map((category) => {
+                    return (
+                      <option key={category.id} value={category.name}>
+                        {category.name}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -82,12 +113,20 @@ export default function Page() {
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   required
                 >
-                  <option value="T-shirt Long Sleeve">
+                  {categories
+                    .find((category) => category.name === selectedCategory)
+                    ?.SubCategory.map((subCategory) => {
+                      return (
+                        <option key={subCategory.id} value={subCategory.name}>
+                          {subCategory.name}
+                        </option>
+                      );
+                    })}
+                  {/* <option value="T-shirt Long Sleeve">
                     T-shirt Long Sleeve
                   </option>
                   <option value="Jeans">Jeans</option>
-                  <option value="Jacket">Jacket</option>
-                  {/* Add more options as needed */}
+                  <option value="Jacket">Jacket</option> */}
                 </select>
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -183,18 +222,14 @@ export default function Page() {
                     <tbody>
                       <tr>
                         <td>
-                          <select
+                          <input
+                            type="text"
                             name="color"
                             id="color"
                             className="w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
+                            placeholder="Black"
                             required
-                          >
-                            <option value="Black">Black</option>
-                            <option value="White">White</option>
-                            <option value="Blue">Blue</option>
-                            <option value="Red">Red</option>
-                            <option value="Green">Green</option>
-                          </select>
+                          />
                         </td>
                         <td>
                           <select
