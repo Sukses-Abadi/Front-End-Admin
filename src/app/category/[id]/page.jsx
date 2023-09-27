@@ -3,12 +3,16 @@ import { getAllSubCategories } from "./components/fetch";
 import { getAllCategories } from "../components/fetch";
 import SubCategories from "./components/SubCategories";
 import AddSubCategory from "./components/AddSubCategory";
+import { redirect } from "next/navigation";
 
 export default async function SubCategory({ params }) {
   const token = cookies().get("accessToken");
   const categoryId = params.id;
   const subCategories = await getAllSubCategories(token.value, categoryId);
   const categories = await getAllCategories(token.value);
+  if (subCategories.error && categories.error === "Unauthorized") {
+    redirect("/logout");
+  }
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-3/4">

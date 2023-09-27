@@ -2,10 +2,14 @@ import { getAllCategories } from "./components/fetch";
 import Categories from "./components/Category";
 import AddCategory from "./components/AddCategory";
 import { cookies } from "next/headers";
+import { redirect } from "next/dist/server/api-utils";
 
 export default async function Category() {
   const token = cookies().get("accessToken");
   const categories = await getAllCategories(token.value);
+  if (categories.error === "Unauthorized") {
+    redirect("/logout");
+  }
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-3/4">

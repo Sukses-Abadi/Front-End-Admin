@@ -8,8 +8,8 @@ export default async function Page() {
   const token = cookies().get("accessToken");
   const bankAccounts = await getAllBankAccount(token.value);
 
-  if(bankAccounts.error === "Unauthorized"){
-    redirect("/logout")
+  if (bankAccounts.error === "Unauthorized") {
+    redirect("/logout");
   }
   return (
     <div className="flex justify-center items-center h-screen">
