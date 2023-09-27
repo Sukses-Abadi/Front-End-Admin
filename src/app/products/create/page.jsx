@@ -8,6 +8,20 @@ export default function Page() {
   const [sku, setSku] = useState("");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [weight, setWeight] = useState(0);
+  const [discount, setDiscount] = useState(null);
+  const [keywords, setKeywords] = useState("");
+  const [description, setDescription] = useState("");
+  const [productDetails, setProductDetails] = useState([]);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("S");
+  const [price, setPrice] = useState(0);
+  const [stock, setStock] = useState(0);
+  const [imageUpload, setImageUpload] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [uploadError, setUploadError] = useState("");
+  const router = useRouter();
 
   const fetchCategories = async () => {
     try {
@@ -20,15 +34,78 @@ export default function Page() {
     }
   };
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (imageFiles.length + files.length > 5) {
+      setUploadError("You can only upload a maximum of 5 images.");
+      return;
+    }
+
+    setUploadError("");
+
+    const fileArray = files?.map((file) => ({
+      previewURL: URL.createObjectURL(file),
+      name: file.name,
+      size: file.size,
+    }));
+
+    setImageFiles([...imageFiles, ...fileArray]);
+    setImageUpload([...imageUpload, ...files]);
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImageFiles = [...imageFiles];
+    const updatedImageUpload = [...imageUpload];
+
+    updatedImageFiles.splice(index, 1);
+    updatedImageUpload.splice(index, 1);
+
+    setImageFiles(updatedImageFiles);
+    setImageUpload(updatedImageUpload);
   };
 
   const handleSubmit = async () => {
+    const formData = new FormData();
+    imageUpload.forEach((imageObj) => {
+      formData.append("files", imageObj);
+    });
+
     try {
-      console.log("HOLA AMIGOS");
+      const imageList = await uploadFiles(formData);
+      const paramsObj = {
+        name: productName,
+        SKU: sku,
+        description,
+        keyword: keywords,
+        discount: +discount,
+        weight: +weight,
+        category_id: +selectedCategory,
+        sub_category_id: +selectedSubCategory,
+        product_galleries: imageList,
+        product_details: productDetails,
+      };
+
+      await createProduct(paramsObj);
+
+      Swal.fire({
+        icon: "success",
+        title: "Product Added Successfully",
+        text: "The new product has been added to the database.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
+      router.push("/products");
     } catch (error) {
       console.log("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Add Product",
+        text: "Oops! Something went wrong while adding the new product.",
+        showConfirmButton: false,
+        showCloseButton: true,
+      });
     }
   };
 
@@ -269,7 +346,18 @@ export default function Page() {
                         <td className="text-center">
                           <button
                             type="button"
-                            className="text-white font-medium text-sm px-2.5 py-1 text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+                            className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
+                            onClick={() => {
+                              setProductDetails((prevDetails) => [
+                                ...prevDetails,
+                                {
+                                  color,
+                                  size,
+                                  price: +price,
+                                  stock: +stock,
+                                },
+                              ]);
+                            }}
                           >
                             +
                           </button>
@@ -303,7 +391,7 @@ export default function Page() {
                       ></path>
                     </svg>
                     <p className="py-1 text-sm text-gray-600">
-                      Upload a file or drag and drop
+                      Select an image to upload
                     </p>
                     <p className="text-xs text-gray-500">
                       PNG, JPG, GIF up to 10MB
