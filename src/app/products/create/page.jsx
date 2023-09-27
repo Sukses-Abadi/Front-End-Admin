@@ -1,35 +1,133 @@
 "use client";
 
+import ImagePreview from "@/components/ImagePreview";
 import { getAllCategory } from "@/fetch/categories";
+import { uploadFiles } from "@/fetch/files";
+import { createProduct } from "@/fetch/products";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Page() {
   const [productName, setProductName] = useState("");
   const [sku, setSku] = useState("");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [weight, setWeight] = useState(0);
+  const [discount, setDiscount] = useState(null);
+  const [keywords, setKeywords] = useState("");
+  const [description, setDescription] = useState("");
+  const [productDetails, setProductDetails] = useState([]);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("S");
+  const [price, setPrice] = useState(0);
+  const [stock, setStock] = useState(0);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [uploadError, setUploadError] = useState("");
+  const router = useRouter;
 
   const fetchCategories = async () => {
     try {
       const response = await getAllCategory();
 
       setCategories(response);
-      setSelectedCategory(response[0].name);
+      setSelectedCategory(response[0].id);
+      setSelectedSubCategory(response[0].SubCategory[0].id);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    console.log("files:", files);
+
+    if (imageFiles.length + files.length > 5) {
+      setUploadError("You can only upload a maximum of 5 images.");
+      return;
+    }
+
+    setUploadError("");
+
+    const fileArray = files?.map((file) => ({
+      previewURL: URL.createObjectURL(file),
+      name: file.name,
+      size: file.size,
+    }));
+
+    setImageFiles([...imageFiles, ...fileArray]);
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImageFiles = [...imageFiles];
+    updatedImageFiles.splice(index, 1);
+    setImageFiles(updatedImageFiles);
   };
 
   const handleSubmit = async () => {
+    const formData = new FormData();
+    imageFiles.forEach((file) => {
+      console.log(file.name);
+      formData.append("files", file);
+    });
+
+    console.log(formData);
+
     try {
-      console.log("HOLA AMIGOS");
+      await uploadFiles(formData);
     } catch (error) {
-      console.log("Error:", error);
+      console.log(error);
     }
+
+    // try {
+    //   const photoArray = imageFiles.map((file) => file.photo);
+
+    //   console.log({
+    //     // productName,
+    //     // sku,
+    //     // selectedCategory,
+    //     // selectedSubCategory,
+    //     // weight,
+    //     // discount,
+    //     // keywords,
+    //     // description,
+    //     // productDetails,
+    //     imageFiles,
+    //   });
+
+    //   // formData.append("name", productName);
+    //   // formData.append("SKU", sku);
+    //   // formData.append("category_id", selectedCategory);
+    //   // formData.append("sub_category_id", selectedSubCategory);
+    //   // formData.append("sub_category_id", selectedSubCategory);
+    //   // formData.append("weight", weight);
+    //   // formData.append("discount", discount);
+    //   // formData.append("keyword", keywords);
+    //   // formData.append("description", description);
+    //   // formData.append("product_details", productDetails);
+
+    //   await createProduct(formData);
+
+    //   Swal.fire({
+    //     icon: "success",
+    //     title: "Product Added Successfully",
+    //     text: "The new product has been added to the database.",
+    //     showConfirmButton: false,
+    //     timer: 2000,
+    //   });
+
+    //   router.push("/products");
+    // } catch (error) {
+    //   console.log("Error:", error);
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "Failed to Add Product",
+    //     text: "Oops! Something went wrong while adding the new product.",
+    //     showConfirmButton: false,
+    //     showCloseButton: true,
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -58,6 +156,7 @@ export default function Page() {
                   id="product-name"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="Long Sleeve T-shirt"
+                  onChange={(e) => setProductName(e.target.value)}
                   required
                 />
               </div>
@@ -74,6 +173,7 @@ export default function Page() {
                   id="sku"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="LS1001"
+                  onChange={(e) => setSku(e.target.value)}
                   required
                 />
               </div>
@@ -88,12 +188,19 @@ export default function Page() {
                   name="category"
                   id="category"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
-                  onChange={handleCategoryChange}
+                  onChange={(e) => {
+                    const subCategory = categories?.find(
+                      (category) => category.id === +e.target.value
+                    )?.SubCategory[0].id;
+
+                    setSelectedCategory(e.target.value);
+                    setSelectedSubCategory(subCategory);
+                  }}
                   required
                 >
-                  {categories.map((category) => {
+                  {categories?.map((category) => {
                     return (
-                      <option key={category.id} value={category.name}>
+                      <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     );
@@ -111,22 +218,18 @@ export default function Page() {
                   name="sub-category"
                   id="sub-category"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
+                  onChange={(e) => setSelectedSubCategory(e.target.value)}
                   required
                 >
                   {categories
-                    .find((category) => category.name === selectedCategory)
-                    ?.SubCategory.map((subCategory) => {
+                    ?.find((category) => category.id === +selectedCategory)
+                    ?.SubCategory?.map((subCategory) => {
                       return (
-                        <option key={subCategory.id} value={subCategory.name}>
+                        <option key={subCategory.id} value={subCategory.id}>
                           {subCategory.name}
                         </option>
                       );
                     })}
-                  {/* <option value="T-shirt Long Sleeve">
-                    T-shirt Long Sleeve
-                  </option>
-                  <option value="Jeans">Jeans</option>
-                  <option value="Jacket">Jacket</option> */}
                 </select>
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -143,6 +246,7 @@ export default function Page() {
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="0"
                   min="0" // Set minimum value to 0 to prevent negative values
+                  onChange={(e) => setWeight(e.target.value)}
                   required
                 />
               </div>
@@ -160,6 +264,7 @@ export default function Page() {
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="0"
                   min="0" // Set minimum value to 0 to prevent negative values
+                  onChange={(e) => setDiscount(e.target.value)}
                 />
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -175,6 +280,7 @@ export default function Page() {
                   id="keyword"
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="t-shirt, long sleeve"
+                  onChange={(e) => setKeywords(e.target.value)}
                 />
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -189,6 +295,7 @@ export default function Page() {
                   rows="3"
                   className="block p-2.5 w-full text-gray-900 border border-gray-300 sm:text-sm rounded-lg focus:ring-orange-300 focus:border-accent"
                   placeholder="e.g. Comfortable long sleeve t-shirt for all occasions."
+                  onChange={(e) => setDescription(e.target.value)}
                   required
                 ></textarea>
               </div>
@@ -201,33 +308,67 @@ export default function Page() {
                   Product Details
                 </label>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full border-b border-gray-200">
-                    <thead>
+                  <table className="min-w-full border-gray-200">
+                    <thead className="text-sm text-left text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr className="bg-gray-100 border-y border-gray-200">
-                        <th className="py-1 px-4 text-left text-sm w-1/4">
+                        <th scope="col" className="py-1 px-4 w-1/4">
                           Color
                         </th>
-                        <th className="py-1 px-4 text-left text-sm w-1/4">
+                        <th scope="col" className="py-1 px-4 w-1/4">
                           Size
                         </th>
-                        <th className="py-1 px-4 text-left text-sm w-1/4">
+                        <th scope="col" className="py-1 px-4 w-1/4">
                           Price (Rp)
                         </th>
-                        <th className="py-1 px-4 text-left text-sm w-1/4">
+                        <th scope="col" className="py-1 px-4 w-1/4">
                           Stock
                         </th>
-                        <th className="py-2 px-4 text-left text-sm"></th>
+                        <th scope="col" className="py-1 px-4"></th>
                       </tr>
                     </thead>
                     <tbody>
+                      {productDetails?.map((detail, index) => {
+                        return (
+                          <tr key={index} className="border-y">
+                            <td className="text-sm px-4 whitespace-nowrap">
+                              {detail.color}
+                            </td>
+                            <td className="text-sm px-4 whitespace-nowrap">
+                              {detail.size}
+                            </td>
+                            <td className="text-sm px-4 whitespace-nowrap">
+                              {detail.price}
+                            </td>
+                            <td className="text-sm px-4 whitespace-nowrap">
+                              {detail.stock}
+                            </td>
+                            <td className="text-center">
+                              <button
+                                type="button"
+                                className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-secondary to-error shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
+                                onClick={() => {
+                                  const updatedDetails = productDetails.filter(
+                                    (_, prevIndex) => prevIndex !== index
+                                  );
+
+                                  setProductDetails(updatedDetails);
+                                }}
+                              >
+                                -
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                       <tr>
                         <td>
                           <input
                             type="text"
                             name="color"
                             id="color"
-                            className="w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
+                            className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="Black"
+                            onChange={(e) => setColor(e.target.value)}
                             required
                           />
                         </td>
@@ -235,7 +376,8 @@ export default function Page() {
                           <select
                             name="size"
                             id="size"
-                            className="w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
+                            className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent px-2.5 my-1"
+                            onChange={(e) => setSize(e.target.value)}
                             required
                           >
                             <option value="S">S</option>
@@ -249,9 +391,10 @@ export default function Page() {
                             type="number"
                             name="price"
                             id="price"
-                            className="w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
+                            className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="0"
                             min="0" // Set minimum value to 0 to prevent negative values
+                            onChange={(e) => setPrice(e.target.value)}
                             required
                           />
                         </td>
@@ -260,16 +403,28 @@ export default function Page() {
                             type="number"
                             name="stock"
                             id="stock"
-                            className="w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
+                            className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="0"
                             min="0" // Set minimum value to 0 to prevent negative values
+                            onChange={(e) => setStock(e.target.value)}
                             required
                           />
                         </td>
                         <td className="text-center">
                           <button
                             type="button"
-                            className="text-white font-medium text-sm px-2.5 py-1 text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+                            className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
+                            onClick={() => {
+                              setProductDetails((prevDetails) => [
+                                ...prevDetails,
+                                {
+                                  color,
+                                  size,
+                                  price,
+                                  stock,
+                                },
+                              ]);
+                            }}
                           >
                             +
                           </button>
@@ -305,12 +460,25 @@ export default function Page() {
                     <p className="py-1 text-sm text-gray-600">
                       Upload a file or drag and drop
                     </p>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
+                    <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
                   </div>
-                  <input type="file" className="hidden" />
+                  <input
+                    key={imageFiles.length}
+                    type="file"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                    multiple={imageFiles.length < 5}
+                  />
                 </label>
+                <ImagePreview
+                  imageFiles={imageFiles}
+                  handleRemoveImage={handleRemoveImage}
+                />
+                {uploadError && (
+                  <div className="bg-red-100 border border-error text-error text-sm px-3 py-2 rounded relative">
+                    {uploadError}
+                  </div>
+                )}
               </div>
             </div>
           </form>

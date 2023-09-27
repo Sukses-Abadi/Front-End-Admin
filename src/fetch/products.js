@@ -24,6 +24,29 @@ export const getAllProducts = async (queryParams) => {
   }
 };
 
+export const createProduct = async (formData) => {
+  try {
+    console.log(formData);
+    // const response = await fetch(`${BASE_URL}/cms/products/`, {
+    //   method: "POST",
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   body: formData,
+    // });
+
+    // if (response.status >= 400) {
+    //   throw new Error(`HTTP error! Status: ${response.status}`);
+    // }
+
+    // const { data } = await response.json();
+
+    // return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const deleteProduct = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}/cms/products/${id}`, {
@@ -36,7 +59,7 @@ export const deleteProduct = async (id) => {
     if (response.status >= 400) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const { data } = await response.json();
 
     return data;
