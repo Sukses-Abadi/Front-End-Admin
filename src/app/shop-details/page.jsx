@@ -2,11 +2,15 @@ import BankAccount from "./components/BankAccount";
 import { getAllBankAccount } from "./components/fetch";
 import AddBankAccount from "./components/AddBankAccount";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
   const token = cookies().get("accessToken");
   const bankAccounts = await getAllBankAccount(token.value);
 
+  if(bankAccounts.error === "Unauthorized"){
+    redirect("/logout")
+  }
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="w-3/4">
