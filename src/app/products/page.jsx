@@ -32,8 +32,8 @@ export default function Page() {
     category_id: null,
     rating: null,
     q: null,
-    sortBy: null,
-    sortOrder: null,
+    sortBy: "id",
+    sortOrder: "asc",
   };
 
   const fetchProductCategory = async (category_id, sub_category_id) => {
