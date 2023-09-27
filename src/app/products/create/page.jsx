@@ -23,9 +23,10 @@ export default function Page() {
   const [size, setSize] = useState("S");
   const [price, setPrice] = useState(0);
   const [stock, setStock] = useState(0);
+  const [imageUpload, setImageUpload] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
   const [uploadError, setUploadError] = useState("");
-  const router = useRouter;
+  const router = useRouter();
 
   const fetchCategories = async () => {
     try {
@@ -41,7 +42,6 @@ export default function Page() {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    console.log("files:", files);
 
     if (imageFiles.length + files.length > 5) {
       setUploadError("You can only upload a maximum of 5 images.");
@@ -57,77 +57,62 @@ export default function Page() {
     }));
 
     setImageFiles([...imageFiles, ...fileArray]);
+    setImageUpload([...imageUpload, ...files]);
   };
 
   const handleRemoveImage = (index) => {
     const updatedImageFiles = [...imageFiles];
+    const updatedImageUpload = [...imageUpload];
+
     updatedImageFiles.splice(index, 1);
+    updatedImageUpload.splice(index, 1);
+
     setImageFiles(updatedImageFiles);
+    setImageUpload(updatedImageUpload);
   };
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    imageFiles.forEach((file) => {
-      console.log(file.name);
-      formData.append("files", file);
+    imageUpload.forEach((imageObj) => {
+      formData.append("files", imageObj);
     });
 
-    console.log(formData);
-
     try {
-      await uploadFiles(formData);
+      const imageList = await uploadFiles(formData);
+      const paramsObj = {
+        name: productName,
+        SKU: sku,
+        description,
+        keyword: keywords,
+        discount: +discount,
+        weight: +weight,
+        category_id: +selectedCategory,
+        sub_category_id: +selectedSubCategory,
+        product_galleries: imageList,
+        product_details: productDetails,
+      };
+
+      await createProduct(paramsObj);
+
+      Swal.fire({
+        icon: "success",
+        title: "Product Added Successfully",
+        text: "The new product has been added to the database.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
+      router.push("/products");
     } catch (error) {
-      console.log(error);
+      console.log("Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Add Product",
+        text: "Oops! Something went wrong while adding the new product.",
+        showConfirmButton: false,
+        showCloseButton: true,
+      });
     }
-
-    // try {
-    //   const photoArray = imageFiles.map((file) => file.photo);
-
-    //   console.log({
-    //     // productName,
-    //     // sku,
-    //     // selectedCategory,
-    //     // selectedSubCategory,
-    //     // weight,
-    //     // discount,
-    //     // keywords,
-    //     // description,
-    //     // productDetails,
-    //     imageFiles,
-    //   });
-
-    //   // formData.append("name", productName);
-    //   // formData.append("SKU", sku);
-    //   // formData.append("category_id", selectedCategory);
-    //   // formData.append("sub_category_id", selectedSubCategory);
-    //   // formData.append("sub_category_id", selectedSubCategory);
-    //   // formData.append("weight", weight);
-    //   // formData.append("discount", discount);
-    //   // formData.append("keyword", keywords);
-    //   // formData.append("description", description);
-    //   // formData.append("product_details", productDetails);
-
-    //   await createProduct(formData);
-
-    //   Swal.fire({
-    //     icon: "success",
-    //     title: "Product Added Successfully",
-    //     text: "The new product has been added to the database.",
-    //     showConfirmButton: false,
-    //     timer: 2000,
-    //   });
-
-    //   router.push("/products");
-    // } catch (error) {
-    //   console.log("Error:", error);
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Failed to Add Product",
-    //     text: "Oops! Something went wrong while adding the new product.",
-    //     showConfirmButton: false,
-    //     showCloseButton: true,
-    //   });
-    // }
   };
 
   useEffect(() => {
@@ -420,8 +405,8 @@ export default function Page() {
                                 {
                                   color,
                                   size,
-                                  price,
-                                  stock,
+                                  price: +price,
+                                  stock: +stock,
                                 },
                               ]);
                             }}
@@ -458,7 +443,7 @@ export default function Page() {
                       ></path>
                     </svg>
                     <p className="py-1 text-sm text-gray-600">
-                      Upload a file or drag and drop
+                      Select an image to upload
                     </p>
                     <p className="text-xs text-gray-500">PNG, JPG up to 10MB</p>
                   </div>

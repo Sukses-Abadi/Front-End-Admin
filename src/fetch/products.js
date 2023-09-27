@@ -24,24 +24,24 @@ export const getAllProducts = async (queryParams) => {
   }
 };
 
-export const createProduct = async (formData) => {
+export const createProduct = async (params) => {
   try {
-    console.log(formData);
-    // const response = await fetch(`${BASE_URL}/cms/products/`, {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body: formData,
-    // });
+    const response = await fetch(`${BASE_URL}/cms/products`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
 
-    // if (response.status >= 400) {
-    //   throw new Error(`HTTP error! Status: ${response.status}`);
-    // }
+    if (response.status >= 400) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-    // const { data } = await response.json();
+    const { data } = await response.json();
 
-    // return data;
+    return data;
   } catch (error) {
     throw new Error(error);
   }

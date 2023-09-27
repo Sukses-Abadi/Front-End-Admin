@@ -6,9 +6,9 @@ export const uploadFiles = async (formData) => {
       method: "POST",
       body: formData,
     });
-    const { data } = await response.json();
-    console.log(response);
-    // return data;
+    const data = await response.json();
+
+    return data;
   } catch (error) {
     throw new Error(error);
   }
