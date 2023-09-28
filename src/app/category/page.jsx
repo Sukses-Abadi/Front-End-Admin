@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/dist/server/api-utils";
 
 export default async function Category() {
-  const token = cookies().get("accessToken");
+  const token = cookies().get("adminAccessToken");
   const categories = await getAllCategories(token.value);
   if (categories.error === "Unauthorized") {
     redirect("/logout");
@@ -29,13 +29,11 @@ export default async function Category() {
             </thead>
             <tbody>
               {categories.data.map((category, index) => (
-                <>
-                  <Categories
-                    key={category.id}
-                    category={category}
-                    index={index}
-                  />
-                </>
+                <Categories
+                  key={category.id}
+                  category={category}
+                  index={index}
+                />
               ))}
             </tbody>
           </table>

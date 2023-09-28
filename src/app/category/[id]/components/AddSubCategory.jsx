@@ -11,7 +11,7 @@ export default function AddSubCategory({ categories }) {
   const [categoryId, setCategoryId] = useState(categories.data[0].id);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const token = getCookie("accessToken");
+  const token = getCookie("adminAccessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);

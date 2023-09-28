@@ -21,7 +21,7 @@ export default function Page() {
         showConfirmButton: false,
         timer: 2000,
       });
-
+      router.refresh();
       router.push("/");
     } catch (error) {
       Swal.fire({
