@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const token = cookies().get("accessToken");
+  const token = cookies().get("adminAccessToken");
   const bankAccounts = await getAllBankAccount(token.value);
 
   if (bankAccounts.error === "Unauthorized") {

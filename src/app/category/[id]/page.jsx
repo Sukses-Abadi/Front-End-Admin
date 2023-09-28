@@ -6,7 +6,7 @@ import AddSubCategory from "./components/AddSubCategory";
 import { redirect } from "next/navigation";
 
 export default async function SubCategory({ params }) {
-  const token = cookies().get("accessToken");
+  const token = cookies().get("adminAccessToken");
   const categoryId = params.id;
   const subCategories = await getAllSubCategories(token.value, categoryId);
   const categories = await getAllCategories(token.value);

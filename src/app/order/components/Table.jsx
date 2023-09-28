@@ -18,6 +18,7 @@ export default function Table() {
   const [page, setPage] = useState("");
   const [limit, setLimit] = useState("10");
   const [trackingUpdate, setTrackingUpdate] = useState("");
+  const [q, setQ] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +27,8 @@ export default function Table() {
         `sortOrder=${dateFilter}` +
         `&status=${activeLink}` +
         `&page=${page}` +
-        `&limit=${limit}`;
+        `&limit=${limit}` +
+        `&q=${q}`;
       console.log(url);
       const data = await fetchWithTokenClient(url, "GET", {
         cache: "no-store",
@@ -34,7 +36,7 @@ export default function Table() {
       setData(data.data);
     };
     fetchData();
-  }, [dateFilter, page, activeLink, limit, trackingUpdate]);
+  }, [dateFilter, page, activeLink, limit, trackingUpdate, q]);
 
   const handleLinkClick = (status) => {
     setActiveLink(status);
@@ -53,6 +55,10 @@ export default function Table() {
   const handleLimit = async (value) => {
     setLimit(value);
     setPage(1);
+  };
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault();
+    setQ(e.target.q.value);
   };
 
   const handleSubmitTrackingNumber = async (event, order_id) => {
@@ -139,17 +145,50 @@ export default function Table() {
   if (!data) return;
 
   return (
-    <section className="container mx-auto p-6 font-mono">
+    <section className="container mx-auto p-6 font-mono max-sm:text-xs">
+      <form onSubmit={handleSearchSubmit}>
+        <div className="relative text-gray-600 focus-within:text-gray-400">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+            <button
+              type="submit"
+              className="p-1 focus:outline-none focus:shadow-outline"
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                className="w-6 h-6"
+              >
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </span>
+          <input
+            type="search order ID"
+            name="q"
+            className="py-2 text-sm text-white bg-gray-200 rounded-md pl-10 focus:outline-none focus:bg-white focus:text-gray-900"
+            placeholder="Search..."
+            autoComplete="off"
+          />
+          <button className="mx-2 p-2 rounded-sm bg-slate-200 text-sm ">
+            Search
+          </button>
+        </div>
+      </form>
+
       {/* FILTER BY DATE */}
-      <div className="px-4 md:px-10 py-4 md:py-7">
-        <div className="flex items-center justify-between">
+      <div className="px-4 md:px-10 py-4 md:py-7 ">
+        <div className="flex items-center justify-between flex-wrap">
           <p
             tabIndex="0"
             className="focus:outline-none text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800"
           >
             Orders
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap">
             <div className="py-3 px-4 flex items-center text-sm font-medium leading-none text-gray-600 bg-gray-200 hover:bg-gray-300 cursor-pointer rounded">
               <p>Show Entries:</p>
               <select
@@ -158,6 +197,9 @@ export default function Table() {
                 onChange={(e) => handleLimit(e.target.value)}
                 defaultValue={"10"}
               >
+                <option value={"5"} className="text-sm text-indigo-800">
+                  5
+                </option>
                 <option value={"10"} className="text-sm text-indigo-800">
                   10
                 </option>
@@ -189,7 +231,7 @@ export default function Table() {
         </div>
       </div>
       {/* STATUS FILTER */}
-      <div className="flex gap-1 my-2 items-center">
+      <div className="flex gap-1 my-2 items-center flex-wrap">
         <a
           className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ${
             activeLink === "" ? "bg-indigo-100 text-indigo-700" : ""
@@ -278,11 +320,12 @@ export default function Table() {
                               onClick={() =>
                                 router.push(`/product/${product.slug}`)
                               }
-                              className="w-20 h-20 rounded-3xl border-gray-200 border transform hover:scale-125"
+                              priority
+                              className=" h-auto w-auto rounded-3xl border-gray-200 border transform hover:scale-125"
                               src={`http://localhost:5000/${photos[0].photo}`}
                               alt={product.name}
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={200}
                             />
                             <p
                               className={`h-4 w-4 ml-1 mt-1 border-2 border-stale-500 rounded-full focus:outline-none`}
@@ -290,6 +333,9 @@ export default function Table() {
                                 backgroundColor: productDetails.color,
                               }}
                             ></p>
+                            <p className=" text-bold">
+                              SKU: {productDetails.product.SKU}
+                            </p>
                             <p className=" text-bold">
                               Size: {productDetails.size}
                             </p>
@@ -306,6 +352,7 @@ export default function Table() {
                     <td className="px-4 py-3 border font-semibold">
                       {order.payment_receipt ? (
                         <Image
+                          className="w-auto h-auto"
                           onClick={() =>
                             router.push(
                               `http://localhost:5000/${order.payment_receipt}`
@@ -487,7 +534,7 @@ export default function Table() {
       </div>
       {/* PAGINATION */}
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div className=" sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
               Showing{" "}

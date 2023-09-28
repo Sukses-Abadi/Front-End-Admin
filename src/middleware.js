@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 export function middleware(request) {
   const authPaths = ["/login", "/register"];
   const isAuthPath = authPaths.includes(request.nextUrl.pathname);
-  const accessToken = request.cookies.get("accessToken");
-  const redirect = (isAuthPath && accessToken) || (!isAuthPath && !accessToken);
+  const adminAccessToken = request.cookies.get("adminAccessToken");
+  const redirect =
+    (isAuthPath && adminAccessToken) || (!isAuthPath && !adminAccessToken);
 
   return redirect
     ? NextResponse.redirect(new URL(isAuthPath ? "/" : "/login", request.url))

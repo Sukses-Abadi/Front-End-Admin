@@ -2,7 +2,7 @@ import BASE_URL from "./baseUrl";
 import { cookies } from "next/headers";
 
 const fetchWithTokenServer = async (endpoint, method, options) => {
-  const token = cookies().get(`accessToken`).value;
+  const token = cookies().get(`adminAccessToken`).value;
 
   const headers = {
     "Content-Type": "application/json",

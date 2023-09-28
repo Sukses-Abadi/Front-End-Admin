@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 export default async function Page() {
-  if (!cookies().get(`accessToken`)) {
+  if (!cookies().get(`adminAccessToken`)) {
     redirect(`/login`);
   }
   // console.log("page server");

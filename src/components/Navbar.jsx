@@ -9,7 +9,7 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    deleteCookie("accessToken");
+    deleteCookie("adminAccessToken");
     router.push("/login");
   };
 
@@ -43,7 +43,7 @@ export default function Navbar() {
               </svg>
             </label>
           </div>
-          <div className="drawer-side">
+          <div className="drawer-side z-10">
             <label htmlFor="my-drawer" className="drawer-overlay"></label>
             <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
               {/* Sidebar content here */}
@@ -57,7 +57,7 @@ export default function Navbar() {
                 <Link href="/category">Category</Link>
               </li>
               <li>
-                <Link href="/shop-details">Shop Details</Link>
+                <Link href="/bank-account">Bank Account</Link>
               </li>
               <li>
                 <a onClick={handleLogout}>Logout</a>
@@ -69,7 +69,7 @@ export default function Navbar() {
       <div className="flex-1">
         <a className="btn btn-ghost normal-case text-xl">SA-Apparel</a>
       </div>
-      <div className="flex-none">
+      {/* <div className="flex-none">
         <button className="btn btn-ghost btn-circle">
           <div className="indicator">
             <svg
@@ -89,7 +89,7 @@ export default function Navbar() {
             <span className="badge badge-xs badge-primary indicator-item"></span>
           </div>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

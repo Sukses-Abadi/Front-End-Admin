@@ -17,7 +17,7 @@ export const login = async (params) => {
 
     const { data } = await response.json();
 
-    data && setCookie("accessToken", data);
+    data && setCookie("adminAccessToken", data);
 
     return data;
   } catch (error) {

@@ -13,7 +13,7 @@ export default function AddBankAccount() {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
-  const token = getCookie("accessToken");
+  const token = getCookie("adminAccessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);

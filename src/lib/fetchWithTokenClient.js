@@ -3,7 +3,7 @@ import BASE_URL from "./baseUrl";
 import { redirect } from "next/navigation";
 
 const fetchWithTokenClient = async (endpoint, method, options) => {
-  const token = getCookie(`accessToken`);
+  const token = getCookie(`adminAccessToken`);
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
