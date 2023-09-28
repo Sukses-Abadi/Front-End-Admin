@@ -108,7 +108,6 @@ export default function Table() {
       );
     }
 
-
     if (totalPages > 6 && currentPage < totalPages - 3) {
       pageButtons.push(
         <span
@@ -322,7 +321,7 @@ export default function Table() {
                                 router.push(`/product/${product.slug}`)
                               }
                               priority
-                              className=" h-auto w-auto rounded-3xl border-gray-200 border transform hover:scale-125"
+                              className=" h-32 w-auto rounded-3xl border-gray-200 border transform hover:scale-125"
                               src={`http://localhost:5000/${photos[0].photo}`}
                               alt={product.name}
                               width={200}
@@ -570,7 +569,7 @@ export default function Table() {
                 onClick={() => handlePage(data.currentPage + 1)}
                 className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                   data.currentPage === data.totalPages ? "hidden" : ""
-                } ${data.totalPages === null ? "" : "hidden"}`}
+                } ${data.totalPages === null ? "hidden" : ""}`}
               >
                 Next
               </button>
