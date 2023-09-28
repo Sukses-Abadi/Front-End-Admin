@@ -29,7 +29,7 @@ export default function Table() {
         `&page=${page}` +
         `&limit=${limit}` +
         `&q=${q}`;
-      console.log(url);
+      // console.log(url);
       const data = await fetchWithTokenClient(url, "GET", {
         cache: "no-store",
       });
