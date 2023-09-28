@@ -108,7 +108,7 @@ export default function Table() {
       );
     }
 
-    if (totalPages > 5 && currentPage < totalPages - 2) {
+    if (totalPages > 6 && currentPage < totalPages - 3) {
       pageButtons.push(
         <span
           key="ellipsis-start"
@@ -120,7 +120,7 @@ export default function Table() {
     }
 
     // Check if the last two buttons are lined up with the first three buttons
-    const lastTwoLinedUp = totalPages <= currentPage + 2 && totalPages > 3;
+    const lastTwoLinedUp = totalPages <= currentPage + 2;
     // Render last two buttons without ellipsis
     if (!lastTwoLinedUp) {
       for (let i = Math.max(totalPages - 1, 4); i <= totalPages; i++) {
