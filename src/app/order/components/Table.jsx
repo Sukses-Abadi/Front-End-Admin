@@ -7,6 +7,7 @@ import Link from "next/link";
 import { redirect, usePathname, useRouter } from "next/navigation";
 
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Table() {
   const pathname = usePathname();
@@ -16,6 +17,7 @@ export default function Table() {
   const [activeLink, setActiveLink] = useState("");
   const [page, setPage] = useState("");
   const [limit, setLimit] = useState("10");
+  const [trackingUpdate, setTrackingUpdate] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +34,7 @@ export default function Table() {
       setData(data.data);
     };
     fetchData();
-  }, [dateFilter, page, activeLink, limit]);
+  }, [dateFilter, page, activeLink, limit, trackingUpdate]);
 
   const handleLinkClick = (status) => {
     setActiveLink(status);
@@ -51,6 +53,27 @@ export default function Table() {
   const handleLimit = async (value) => {
     setLimit(value);
     setPage(1);
+  };
+
+  const handleSubmitTrackingNumber = async (event, order_id) => {
+    event.preventDefault(); // Prevents the default form submission behavior
+    const tracking_number = event.target.tracking_number.value;
+    if (!tracking_number) {
+      Swal.fire({ text: "Please enter tracking number" });
+      return;
+    }
+    const body = {
+      tracking_number,
+      status: "shipped",
+    };
+
+    const data = await fetchWithTokenClient(`cms/order/${order_id}`, "PUT", {
+      body: JSON.stringify(body),
+    });
+    if (data.status === "success") {
+      Swal.fire({ icon: "success", text: "Success" });
+      setTrackingUpdate(tracking_number);
+    }
   };
 
   const renderPageButtons = () => {
@@ -92,15 +115,6 @@ export default function Table() {
 
     // Check if the last two buttons are lined up with the first three buttons
     const lastTwoLinedUp = totalPages <= currentPage + 2 && totalPages > 3;
-    // console.log(
-    //   lastTwoLinedUp,
-    //   totalPages,
-    //   "<",
-    //   currentPage + 2,
-    //   "&&",
-    //   totalPages,
-    //   "> 3"
-    // );
     // Render last two buttons without ellipsis
     if (!lastTwoLinedUp) {
       for (let i = Math.max(totalPages - 1, 4); i <= totalPages; i++) {
@@ -330,20 +344,139 @@ export default function Table() {
                     <td className="p-1 border flex-wrap">
                       {" "}
                       {order.tracking_number || (
-                        <input
-                          className="border "
-                          name="tracking_number"
-                          placeholder="Tracking Number Here"
-                        />
+                        <form
+                          onSubmit={(e) =>
+                            handleSubmitTrackingNumber(e, order.id)
+                          }
+                        >
+                          <input
+                            className="border "
+                            name="tracking_number"
+                            placeholder="Tracking Number Here"
+                          />
+                          <button
+                            type="submit"
+                            className="p-1 hover:bg-slate-400 bg-slate-100 rounded-md"
+                          >
+                            Submit
+                          </button>
+                        </form>
                       )}{" "}
-                      <button className="p-1 hover:bg-slate-400 bg-slate-100 rounded-md">
-                        Submit
-                      </button>
                     </td>
                     <td className="text-center border">
-                      <button className="p-1 px-2 hover:bg-slate-400 bg-slate-100 rounded-md">
-                        View
+                      <button
+                        className="btn"
+                        onClick={() =>
+                          document.getElementById("my_modal_4").showModal()
+                        }
+                      >
+                        VIEW
                       </button>
+                      {/* MODAL <<<<<<<<<<<<<<<<<<<<<< */}
+                      <dialog id="my_modal_4" className="modal">
+                        <div className="modal-box w-11/12 max-w-5xl">
+                          <div className="md:flex md:items-center mb-3 ">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Order Date</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>{order.order_date}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">address</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>
+                                {order.address.street},{order.address.zip_code}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Total Price</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>Rp. {order.total_price}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              F<p className="font-semibold">Total Weight</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>{order.total_weight} gram</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Courier</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>{order.courier}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Shipping Method</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p className="">{order.shipping_method}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Tracking Number</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>{order.tracking_number}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Shipping Cost</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>Rp. {order.shipping_cost}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Total Cost</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              <p>Rp. {order.total_payment}</p>
+                            </div>
+                          </div>
+                          <div className="md:flex md:items-center mb-3">
+                            <div className="md:w-1/3 my-2">
+                              <p className="font-semibold">Payment Receipt</p>
+                            </div>
+                            <div className="md:w-2/3">
+                              {order.payment_receipt ? (
+                                <Image
+                                  onClick={() =>
+                                    router.push(
+                                      `http://localhost:5000/${order.payment_receipt}`
+                                    )
+                                  }
+                                  src={`http://localhost:5000/${order.payment_receipt}`}
+                                  alt={order.payment_receipt}
+                                  height={200}
+                                  width={200}
+                                />
+                              ) : null}
+                            </div>
+                          </div>
+                          <div className="modal-action">
+                            <form method="dialog">
+                              {/* if there is a button, it will close the modal */}
+                              <button className="btn">Close</button>
+                            </form>
+                          </div>
+                        </div>
+                      </dialog>
                     </td>
                   </tr>
                 );
@@ -389,7 +522,7 @@ export default function Table() {
                 onClick={() => handlePage(data.currentPage + 1)}
                 className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
                   data.currentPage === data.totalPages ? "hidden" : ""
-                }`}
+                } ${data.totalPages === null ? "" : "hidden"}`}
               >
                 Next
               </button>
