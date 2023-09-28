@@ -108,6 +108,7 @@ export default function Table() {
       );
     }
 
+
     if (totalPages > 6 && currentPage < totalPages - 3) {
       pageButtons.push(
         <span
