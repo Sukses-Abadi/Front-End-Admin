@@ -11,7 +11,7 @@ export default function UpdateCategory({ category }) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
 
-  const token = getCookie("accessToken");
+  const token = getCookie("adminAccessToken");
   const router = useRouter();
 
   const handleModal = () => {

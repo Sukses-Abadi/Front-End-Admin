@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export function middleware(request) {
   const authPaths = ["/login", "/register"];
   const isAuthPath = authPaths.includes(request.nextUrl.pathname);
-  const accessToken = request.cookies.get("accessToken");
+  const accessToken = request.cookies.get("adminAccessToken");
   const redirect = (isAuthPath && accessToken) || (!isAuthPath && !accessToken);
 
   return redirect

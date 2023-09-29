@@ -12,7 +12,7 @@ export default function UpdateSubCategory({ subCategories, categories }) {
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const router = useRouter();
-  const token = getCookie("accessToken");
+  const token = getCookie("adminAccessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);

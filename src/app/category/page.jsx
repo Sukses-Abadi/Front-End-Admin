@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/dist/server/api-utils";
 
 export default async function Category() {
-  const token = cookies().get("accessToken");
+  const token = cookies().get("adminAccessToken");
   const categories = await getAllCategories(token.value);
   if (categories.error === "Unauthorized") {
     redirect("/logout");

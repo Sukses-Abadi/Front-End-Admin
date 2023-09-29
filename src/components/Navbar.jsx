@@ -9,7 +9,7 @@ export default function Navbar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    deleteCookie("accessToken");
+    deleteCookie("adminAccessToken");
     router.push("/login");
   };
 

@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 
 export default function DeleteSubCategory({ subCategories }) {
   const [isOpen, setIsOpen] = useState(false);
-  const token = getCookie("accessToken");
+  const token = getCookie("adminAccessToken");
   const router = useRouter();
 
   const handleModal = () => {
