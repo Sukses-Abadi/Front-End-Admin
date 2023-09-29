@@ -32,8 +32,8 @@ export default function Page() {
     category_id: null,
     rating: null,
     q: null,
-    sortBy: "id",
-    sortOrder: "asc",
+    sortBy: null,
+    sortOrder: null,
   };
 
   const fetchProductCategory = async (category_id, sub_category_id) => {
@@ -204,7 +204,6 @@ export default function Page() {
           <div className="flex items-center mt-3 sm:mt-1 w-full">
             <button
               type="button"
-              data-modal-toggle="add-product-modal"
               className="inline-flex items-center ml-0 sm:ml-5 py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-orange-300 to-accent rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
               onClick={() => router.push("/products/create")}
             >
@@ -227,7 +226,6 @@ export default function Page() {
             ) && (
               <button
                 type="button"
-                data-modal-toggle="delete-product-modal"
                 className="inline-flex items-center ml-2 sm:ml-auto py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
                 onClick={handleDeleteProducts}
               >
@@ -324,30 +322,44 @@ export default function Page() {
                     <td className="px-6 border-b border-blue-gray-50">
                       {product.discount === null ? (
                         <div
-                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-gray-600 to-gray-500 text-white py-0.5 px-2 text-[11px] font-medium"
+                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-gray-600 to-gray-500 text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
                           data-projection-id="9"
                           style={{ opacity: 1 }}
                         >
-                          <div className="mt-px">inactive</div>
+                          <div className="my-px">inactive</div>
                         </div>
                       ) : (
                         <div
-                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-green-600 to-green-400 text-white py-0.5 px-2 text-[11px] font-medium"
+                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-green-700 to-green-500 text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
                           data-projection-id="8"
                           style={{ opacity: 1 }}
                         >
-                          <div className="mt-px">active</div>
+                          <div className="my-px">active</div>
                         </div>
                       )}
                     </td>
                     <th className="px-6 py-4">
                       <button
-                        className="btn btn-ghost btn-xs"
+                        type="button"
+                        className="inline-flex items-center py-1 px-3 text-sm font-medium text-center text-gray-700 bg-gray-200 rounded-lg shadow-md  hover:bg-gray-300 hover:text-gray-900 hover:scale-[1.02] transition-all"
                         onClick={() => {
-                          router.push(`/products/${product.id}`);
+                          router.push(`/products/${product.id}/edit`);
                         }}
                       >
-                        details
+                        <svg
+                          className="mr-2 w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                          <path
+                            fillRule="evenodd"
+                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        Edit
                       </button>
                     </th>
                   </tr>
