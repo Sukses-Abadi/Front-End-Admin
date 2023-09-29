@@ -12,7 +12,7 @@ export default function UpdateBankAccount({ bankAccount }) {
   const [accountNumber, setAccountNumber] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const token = getCookie("accessToken");
+  const token = getCookie("adminAccessToken");
 
   const handleModal = () => {
     setIsOpen(!isOpen);

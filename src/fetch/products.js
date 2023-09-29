@@ -1,7 +1,7 @@
 import BASE_URL from "@/lib/baseUrl";
 import { getCookie } from "cookies-next";
 
-const token = getCookie("accessToken");
+const token = getCookie("adminAccessToken");
 
 export const getAllProducts = async (queryParams) => {
   const filteredQueryParams = Object.fromEntries(
