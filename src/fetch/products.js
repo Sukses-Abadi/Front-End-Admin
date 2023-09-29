@@ -24,10 +24,49 @@ export const getAllProducts = async (queryParams) => {
   }
 };
 
+export const getSingleProduct = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/cms/products/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const { data } = await response.json();
+
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const createProduct = async (params) => {
   try {
     const response = await fetch(`${BASE_URL}/cms/products`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    });
+
+    if (response.status >= 400) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const { data } = await response.json();
+
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateProduct = async (id, params) => {
+  try {
+    const response = await fetch(`${BASE_URL}/cms/products/${id}`, {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ImagePreview = ({ imageFiles, handleRemoveImage }) => {
+const ImagePreview = ({ imagePreview, handleRemoveImage }) => {
   const formatSize = (bytes) => {
     if (bytes === 0) return "0 Bytes";
 
@@ -13,7 +13,7 @@ const ImagePreview = ({ imageFiles, handleRemoveImage }) => {
 
   return (
     <div className="mt-4">
-      {imageFiles?.map((image, index) => (
+      {imagePreview?.map((image, index) => (
         <div
           key={index}
           className="flex items-center bg-gray-100 p-2 rounded-lg mb-2"
