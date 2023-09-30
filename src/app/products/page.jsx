@@ -17,6 +17,7 @@ export default function Page() {
   const [nextPage, setNextPage] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [totalItems, setTotalItems] = useState(null);
+  const [searchBar, setSearchBar] = useState("");
   const itemsPerPage = 2;
   const router = useRouter();
 
@@ -31,7 +32,7 @@ export default function Page() {
     sub_category_id: null,
     category_id: null,
     rating: null,
-    q: null,
+    q: searchBar,
     sortBy: null,
     sortOrder: null,
   };
@@ -170,7 +171,7 @@ export default function Page() {
   useEffect(() => {
     fetchProducts(queryParams);
     setSelectedCheckboxes({});
-  }, [currentPage]);
+  }, [currentPage, searchBar]);
 
   return (
     <div className="max-w-7xl mx-auto mt-5">
@@ -199,6 +200,11 @@ export default function Page() {
               id="table-search"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg shadow-md focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search for items"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setSearchBar(e.target.value);
+                }
+              }}
             />
           </div>
           <div className="flex items-center mt-3 sm:mt-1 w-full">
