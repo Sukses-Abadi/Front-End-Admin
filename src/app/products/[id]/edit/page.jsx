@@ -1,8 +1,8 @@
 import fetchWithTokenServer from "@/lib/fetchWithTokenServer";
 import { redirect } from "next/navigation";
-import ProductTable from "@/components/ProductTable";
+import EditProductForm from "@/components/EditProductForm";
 
-export default async function Page() {
+export default async function Page({ params }) {
   const res = await fetchWithTokenServer("cms/category", "GET");
   if (res === "Unauthorized") {
     redirect("/logout");
@@ -11,5 +11,5 @@ export default async function Page() {
   const data = res.data;
   if (!data) return;
 
-  return <ProductTable />;
+  return <EditProductForm params={params} />;
 }

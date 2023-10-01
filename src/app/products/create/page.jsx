@@ -1,6 +1,6 @@
 import fetchWithTokenServer from "@/lib/fetchWithTokenServer";
 import { redirect } from "next/navigation";
-import ProductTable from "@/components/ProductTable";
+import CreateProductForm from "@/components/CreateProductForm";
 
 export default async function Page() {
   const res = await fetchWithTokenServer("cms/category", "GET");
@@ -11,5 +11,5 @@ export default async function Page() {
   const data = res.data;
   if (!data) return;
 
-  return <ProductTable />;
+  return <CreateProductForm />;
 }
