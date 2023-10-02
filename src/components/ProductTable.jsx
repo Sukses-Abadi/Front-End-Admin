@@ -19,10 +19,13 @@ export default function ProductTable() {
   const [filteredDiscountStatus, setFilteredDiscountStatus] = useState(null);
   const [selectedRestockStatus, setSelectedRestockStatus] = useState("");
   const [filteredRestockStatus, setFilteredRestockStatus] = useState(null);
+  const [selectedRatings, setSelectedRatings] = useState([]);
+  const [filteredRatings, setFilteredRatings] = useState(null);
   const [filteredSortBy, setFilteredSortBy] = useState("created_at");
   const [filteredSortOrder, setFilteredSortOrder] = useState("desc");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
+  const [itemsPerPage, setItemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(null);
   const [nextPage, setNextPage] = useState(null);
@@ -30,7 +33,7 @@ export default function ProductTable() {
   const [totalItems, setTotalItems] = useState(null);
   const [searchBar, setSearchBar] = useState("");
   const [productLoaded, setProductLoaded] = useState(false);
-  const itemsPerPage = 2;
+  const [isDropdownOpen, setIsDropdownOpen] = useState({});
   const router = useRouter();
 
   const queryParams = {
@@ -47,6 +50,7 @@ export default function ProductTable() {
       filteredSubCategories?.length === 0 ? null : filteredSubCategories,
     category_id: filteredCategories?.length === 0 ? null : filteredCategories,
     rating: null,
+    averageRating: filteredRatings?.length === 0 ? null : filteredRatings,
     q: searchBar,
     sortBy: filteredSortBy,
     sortOrder: filteredSortOrder,
@@ -75,7 +79,14 @@ export default function ProductTable() {
                   product.sub_category_id
                 );
 
-              return { ...product, categoryName, subCategoryName };
+              const countReviews = product.reviews.length;
+
+              return {
+                ...product,
+                categoryName,
+                subCategoryName,
+                countReviews,
+              };
             })
           )
         : null;
@@ -205,6 +216,7 @@ export default function ProductTable() {
 
     setSelectedCheckboxes({});
   }, [
+    itemsPerPage,
     currentPage,
     searchBar,
     filteredCategories,
@@ -213,15 +225,12 @@ export default function ProductTable() {
     filteredRestockStatus,
     filteredSortBy,
     filteredSortOrder,
+    filteredRatings,
   ]);
-
-  if (!productLoaded) {
-    return <div className="ml-2 mt-2">Loading...</div>;
-  }
 
   return (
     <div className="max-w-7xl mx-auto mt-5">
-      <div className="relative shadow-md sm:rounded-lg">
+      <div className="relative shadow-md sm:rounded-lg mb-28">
         <div className="p-4 flex flex-col md:flex-row items-start">
           <label htmlFor="table-search" className="sr-only">
             Search
@@ -296,82 +305,81 @@ export default function ProductTable() {
                 </button>
               )}
               {/* Add the filter button here */}
-              <button
-                id="dropdownButton"
-                data-dropdown-toggle="dropdown"
-                className="flex items-center justify-center py-2.5 px-4 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                type="button"
-              >
-                <svg
-                  className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 mr-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+              <div className="relative inline-block text-left">
+                <button
+                  id="productSortDropdown"
+                  className="flex items-center justify-center py-2.5 px-4 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                  type="button"
+                  onClick={() => {
+                    setIsDropdownOpen((prevState) => ({
+                      ...prevState,
+                      ["productSortDropdown"]:
+                        !prevState["productSortDropdown"],
+                    }));
+                  }}
                 >
-                  <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
-                </svg>
-                {filteredSortOrder === "asc" ? "Oldest" : "Latest"}
-                <svg
-                  className="-mr-1 ml-1.5 w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
+                  <svg
+                    className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 mr-2.5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+                  </svg>
+                  {filteredSortOrder === "asc" ? "Oldest" : "Latest"}
+                  <svg
+                    className="-mr-1 ml-1.5 w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    />
+                  </svg>
+                </button>
+                <div
+                  className={`${
+                    isDropdownOpen["productSortDropdown"] ? "block" : "hidden"
+                  } absolute z-10 ml-2 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}
+                  style={{ maxWidth: "128px" }}
                 >
-                  <path
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  />
-                </svg>
-              </button>
-              <div
-                id="dropdown"
-                className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                data-popper-reference-hidden=""
-                data-popper-escaped=""
-                data-popper-placement="top"
-                style={{
-                  position: "absolute",
-                  inset: "auto auto 0px 0px",
-                  margin: "0px",
-                  transform: "translate3d(522.5px, 3847.5px, 0px)",
-                  maxWidth: "128px",
-                }}
-              >
-                <ul
-                  className="p-2 text-sm text-gray-700 dark:text-gray-200"
-                  aria-labelledby="dropdownButton"
-                >
-                  <li>
-                    <div
-                      className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                      onClick={() => {
-                        setFilteredSortBy("created_at");
-                        setFilteredSortOrder("desc");
-                      }}
-                    >
-                      Latest
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                      onClick={() => {
-                        setFilteredSortBy("created_at");
-                        setFilteredSortOrder("asc");
-                      }}
-                    >
-                      Oldest
-                    </div>
-                  </li>
-                </ul>
+                  <ul className="p-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                    {["Latest", "Oldest"].map((option) => (
+                      <li key={option}>
+                        <div
+                          className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                          onClick={() => {
+                            setFilteredSortBy("created_at");
+                            setFilteredSortOrder(
+                              option === "Latest" ? "desc" : "asc"
+                            );
+
+                            setIsDropdownOpen((prevState) => ({
+                              ...prevState,
+                              ["productSortDropdown"]:
+                                !prevState["productSortDropdown"],
+                            }));
+                          }}
+                        >
+                          {option}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="overflow-x-auto h-44">
+        <div
+          className="overflow-x-auto"
+          style={{ minHeight: "200px", maxHeight: "500px" }}
+        >
           <table className="table">
             <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -387,6 +395,91 @@ export default function ProductTable() {
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Name
+                  <div className="dropdown">
+                    <button
+                      tabIndex={0}
+                      className="filter-button m-0.5 p-1 rounded-sm hover:text-white hover:bg-accent hover:shadow-sm hover:shadow-gray-300"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="w-3 h-3"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    <div
+                      tabIndex={0}
+                      className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-md w-32"
+                    >
+                      <div style={{ maxHeight: "100px", overflowY: "auto" }}>
+                        {["★1", "★2", "★3", "★4", "★5"].map((status, index) => {
+                          return (
+                            <label
+                              key={index}
+                              className="flex items-center"
+                              style={{ textTransform: "none" }}
+                            >
+                              <input
+                                type="checkbox"
+                                value={status}
+                                name="ratingsFilter"
+                                className="mr-1 block"
+                                onChange={() => {
+                                  if (selectedRatings.includes(index + 1)) {
+                                    const newArray = selectedRatings.filter(
+                                      (item) => item !== index + 1
+                                    );
+                                    setSelectedRatings(newArray);
+                                  } else {
+                                    setSelectedRatings([
+                                      ...selectedRatings,
+                                      index + 1,
+                                    ]);
+                                  }
+                                }}
+                              />
+                              {status}
+                            </label>
+                          );
+                        })}
+                      </div>
+                      <div className="flex items-center justify-between mt-2">
+                        <button
+                          type="button"
+                          className="w-2/5 mt-2 py-0.5 text-white  font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-error hover:scale-[1.01] transition-all"
+                          style={{ fontSize: "13px" }}
+                          onClick={() => {
+                            const checkboxes = document.querySelectorAll(
+                              'input[name="ratingsFilter"]'
+                            );
+                            checkboxes?.forEach((checkbox) => {
+                              checkbox.checked = false;
+                            });
+
+                            setSelectedRatings([]);
+                          }}
+                        >
+                          Reset
+                        </button>
+                        <button
+                          type="button"
+                          className="w-2/5 mt-2 ml-auto py-0.5 text-white font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-accent hover:scale-[1.01] transition-all"
+                          style={{ fontSize: "13px" }}
+                          onClick={() => {
+                            setFilteredRatings(selectedRatings);
+                          }}
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   SKU
@@ -771,109 +864,141 @@ export default function ProductTable() {
               </tr>
             </thead>
             <tbody>
-              {products?.map((product) => {
-                return (
-                  <tr key={product.id}>
-                    <th>
-                      <label>
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={selectedCheckboxes[product.id] || false}
-                          onChange={(event) =>
-                            handleCheckboxChange(event, product.id)
-                          }
-                        />
-                      </label>
-                    </th>
-                    <td scope="row" className="px-6 whitespace-nowrap">
-                      <div className="font-bold">{product.name}</div>
-                    </td>
-                    <td className="px-6 whitespace-nowrap">{product.SKU}</td>
-                    <td className="px-6">
-                      {handleKeywords(product.keyword).map((item, index) => {
-                        return (
-                          <span
-                            key={index}
-                            className="badge badge-ghost badge-sm whitespace-nowrap"
+              {!productLoaded ? (
+                <tr className="border-none">
+                  <td>Loading...</td>
+                </tr>
+              ) : (
+                products?.map((product) => {
+                  return (
+                    <tr key={product.id}>
+                      <th>
+                        <label>
+                          <input
+                            type="checkbox"
+                            className="checkbox"
+                            checked={selectedCheckboxes[product.id] || false}
+                            onChange={(event) =>
+                              handleCheckboxChange(event, product.id)
+                            }
+                          />
+                        </label>
+                      </th>
+                      <td scope="row" className="px-6 whitespace-nowrap">
+                        <div className="font-bold">{product.name}</div>
+                        {product.averageRating && (
+                          <div
+                            className="text-gray-600"
+                            style={{ textTransform: "none", fontSize: "13px" }}
                           >
-                            {item}
-                          </span>
-                        );
-                      })}
-                    </td>
-                    <td className="px-6 whitespace-nowrap">
-                      {product.categoryName}
-                    </td>
-                    <td className="px-6 whitespace-nowrap">
-                      {product.subCategoryName}
-                    </td>
-                    <td className="px-6 whitespace-nowrap">
-                      {product.productDetails.some(
-                        (detail) => detail.stock === 0
-                      ) && (
-                        <div
-                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-error text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
-                          data-projection-id="10"
-                          style={{ opacity: 1 }}
+                            ★{product.averageRating}
+                            <svg
+                              className="humbleicons hi-circle inline w-1.5 h-1.5 mx-1 mb-0.5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              stroke="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                xmlns="http://www.w3.org/2000/svg"
+                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            <a
+                              className="hover:text-blue-500"
+                              href={`/products/${product.id}/reviews`}
+                            >
+                              {product.countReviews} Reviews
+                            </a>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 whitespace-nowrap">{product.SKU}</td>
+                      <td className="px-6">
+                        {handleKeywords(product.keyword).map((item, index) => {
+                          return (
+                            <span
+                              key={index}
+                              className="badge badge-ghost badge-sm whitespace-nowrap"
+                            >
+                              {item}
+                            </span>
+                          );
+                        })}
+                      </td>
+                      <td className="px-6 whitespace-nowrap">
+                        {product.categoryName}
+                      </td>
+                      <td className="px-6 whitespace-nowrap">
+                        {product.subCategoryName}
+                      </td>
+                      <td className="px-6 whitespace-nowrap">
+                        {product.productDetails.some(
+                          (detail) => detail.stock === 0
+                        ) && (
+                          <div
+                            className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-error text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
+                            data-projection-id="10"
+                            style={{ opacity: 1 }}
+                          >
+                            <div className="my-px">restock</div>
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 border-b border-blue-gray-50">
+                        {product.discount === null ? (
+                          <div
+                            className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-gray-600 to-gray-500 text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
+                            data-projection-id="9"
+                            style={{ opacity: 1 }}
+                          >
+                            <div className="my-px">inactive</div>
+                          </div>
+                        ) : (
+                          <div
+                            className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-green-700 to-green-500 text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
+                            data-projection-id="8"
+                            style={{ opacity: 1 }}
+                          >
+                            <div className="my-px">active</div>
+                          </div>
+                        )}
+                      </td>
+                      <th className="px-6 py-4">
+                        <button
+                          type="button"
+                          className="inline-flex items-center py-1 px-3 text-sm font-medium text-center text-gray-700 bg-gray-200 rounded-lg shadow-md  hover:bg-gray-300 hover:text-gray-900 hover:scale-[1.02] transition-all"
+                          onClick={() => {
+                            router.push(`/products/${product.id}/edit`);
+                          }}
                         >
-                          <div className="my-px">restock</div>
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 border-b border-blue-gray-50">
-                      {product.discount === null ? (
-                        <div
-                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-gray-600 to-gray-500 text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
-                          data-projection-id="9"
-                          style={{ opacity: 1 }}
-                        >
-                          <div className="my-px">inactive</div>
-                        </div>
-                      ) : (
-                        <div
-                          className="relative inline-block align-baseline font-sans uppercase center whitespace-nowrap rounded-lg select-none bg-gradient-to-tr from-green-700 to-green-500 text-white text-center w-20 py-1 px-2 text-[11px] font-medium"
-                          data-projection-id="8"
-                          style={{ opacity: 1 }}
-                        >
-                          <div className="my-px">active</div>
-                        </div>
-                      )}
-                    </td>
-                    <th className="px-6 py-4">
-                      <button
-                        type="button"
-                        className="inline-flex items-center py-1 px-3 text-sm font-medium text-center text-gray-700 bg-gray-200 rounded-lg shadow-md  hover:bg-gray-300 hover:text-gray-900 hover:scale-[1.02] transition-all"
-                        onClick={() => {
-                          router.push(`/products/${product.id}/edit`);
-                        }}
-                      >
-                        <svg
-                          className="mr-2 w-4 h-4"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
-                          <path
-                            fillRule="evenodd"
-                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                            clipRule="evenodd"
-                          ></path>
-                        </svg>
-                        Edit
-                      </button>
-                    </th>
-                  </tr>
-                );
-              })}
+                          <svg
+                            className="mr-2 w-4 h-4"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                            <path
+                              fillRule="evenodd"
+                              d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                          Edit
+                        </button>
+                      </th>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
         {/* CODE FOR PAGINATION!!! */}
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
+          <div className="sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div className="flex items-center justify-between whitespace-nowrap">
               <p className="text-sm text-gray-700">
                 Showing{" "}
                 <span className="font-medium">
@@ -885,10 +1010,79 @@ export default function ProductTable() {
                 </span>{" "}
                 of <span className="font-medium">{totalItems}</span> results
               </p>
+              {/* Add the show entries button here */}
+              <div className="relative inline-block text-left">
+                <div className="flex items-center justify-center py-1.5 px-2 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                  <div className="flex font-normal text-sm text-gray-700">
+                    Show:
+                    <button
+                      id="entriesPerPageDropdown"
+                      className="font-medium pl-1 hover:bg-gray-100 hover:text-primary-700 rounded-md"
+                      type="button"
+                      onClick={() => {
+                        setIsDropdownOpen((prevState) => ({
+                          ...prevState,
+                          ["entriesPerPageDropdown"]:
+                            !prevState["entriesPerPageDropdown"],
+                        }));
+                      }}
+                    >
+                      {itemsPerPage}
+                      <svg
+                        className="w-4 h-4 inline-block"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          clipRule="evenodd"
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        />
+                      </svg>
+                    </button>
+                    Entries
+                  </div>
+                </div>
+                <div
+                  className={`${
+                    isDropdownOpen["entriesPerPageDropdown"]
+                      ? "block"
+                      : "hidden"
+                  } absolute z-10 ml-11 mt-0.5 bg-white divide-y divide-gray-100 rounded-sm shadow dark:bg-gray-700 dark:divide-gray-600`}
+                  style={{ maxWidth: "128px" }}
+                >
+                  <ul className="py-1 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                    {[2, 10, 20, 50].map((option) => (
+                      <li key={option}>
+                        <div
+                          className={`flex items-center rounded-sm px-4 ${
+                            itemsPerPage === option
+                              ? "bg-blue-500 text-white"
+                              : "hover:bg-gray-100 dark:hover:bg-gray-600"
+                          }`}
+                          onClick={() => {
+                            setCurrentPage(1);
+                            setItemsPerPage(option);
+                            setIsDropdownOpen((prevState) => ({
+                              ...prevState,
+                              ["entriesPerPageDropdown"]:
+                                !prevState["entriesPerPageDropdown"],
+                            }));
+                          }}
+                        >
+                          {option}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
             <div>
               <nav
-                className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                className="isolate inline-flex -space-x-px rounded-md shadow-sm mt-2 sm:mt-0"
                 aria-label="Pagination"
               >
                 <a
