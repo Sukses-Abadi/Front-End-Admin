@@ -2,8 +2,6 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { LayoutProvider } from "@/lib/LayoutProvider";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata = {
   title: "Sukses Abadi Admin Dashboard",
   description: "Sukses Abadi",
@@ -12,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="bg-[#FEF9F9]">
         <LayoutProvider>{children}</LayoutProvider>
       </body>
     </html>
