@@ -68,7 +68,7 @@ export default function TransferReceipt({ data }) {
         ) : (
           "No payment receipt is submitted"
         )}
-        {data.payment_receipt && data.status === "received" ? (
+        {data.status === "received" ? (
           <div className="flex p-5 items-center justify-center">
             <button
               className="bg-green-300 py-1 px-2 rounded-md mr-10"

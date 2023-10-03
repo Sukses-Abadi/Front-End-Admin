@@ -58,7 +58,7 @@ export default function Table() {
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
     if (e.target.q.value.length < 10) {
-      setQ(parseInt(e.target.q.value));
+      setQ(e.target.q.value);
     } else {
       Swal.fire(`Please input a valid number`);
     }
