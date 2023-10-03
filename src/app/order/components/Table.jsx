@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function Table() {
-  const pathname = usePathname();
   const router = useRouter();
   const [data, setData] = useState();
   const [dateFilter, setDateFilter] = useState("desc");
@@ -58,7 +57,11 @@ export default function Table() {
   };
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    setQ(e.target.q.value);
+    if (e.target.q.value.length < 10) {
+      setQ(e.target.q.value);
+    } else {
+      Swal.fire(`Please input a valid number`);
+    }
   };
 
   const handleSubmitTrackingNumber = async (event, order_id) => {
@@ -233,7 +236,7 @@ export default function Table() {
       {/* STATUS FILTER */}
       <div className="flex gap-1 my-2 items-center flex-wrap">
         <a
-          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ${
+          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 cursor-pointer focus:ring-indigo-800 ${
             activeLink === "" ? "bg-indigo-100 text-indigo-700" : ""
           }`}
           onClick={() => handleLinkClick("")}
@@ -253,7 +256,7 @@ export default function Table() {
           </div>
         </a>
         <a
-          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8 ${
+          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800  cursor-pointer ${
             activeLink === "received" ? "bg-indigo-100 text-indigo-700" : ""
           }`}
           onClick={() => handleLinkClick("received")}
@@ -263,7 +266,17 @@ export default function Table() {
           </div>
         </a>
         <a
-          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8 ${
+          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 cursor-pointer ${
+            activeLink === "rejected" ? "bg-indigo-100 text-indigo-700" : ""
+          }`}
+          onClick={() => handleLinkClick("rejected")}
+        >
+          <div className="py-2 px-8 rounded-full">
+            <p>Rejected</p>
+          </div>
+        </a>
+        <a
+          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50  cursor-pointer focus:ring-indigo-800  ${
             activeLink === "shipped" ? "bg-indigo-100 text-indigo-700" : ""
           }`}
           onClick={() => handleLinkClick("shipped")}
@@ -273,7 +286,7 @@ export default function Table() {
           </div>
         </a>
         <a
-          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 focus:ring-indigo-800 ml-4 sm:ml-8 ${
+          className={`rounded-full focus:outline-none focus:ring-2 focus:bg-indigo-50 cursor-pointer focus:ring-indigo-800  ${
             activeLink === "complete" ? "bg-indigo-100 text-indigo-700" : ""
           }`}
           onClick={() => handleLinkClick("complete")}
@@ -290,9 +303,9 @@ export default function Table() {
             <thead>
               <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                 <th className="px-4 py-3">Order ID</th>
-                <th className="px-4 py-3">Product</th>
+                {/* <th className="px-4 py-3">Product</th> */}
                 <th className="px-4 py-3">Total Payment</th>
-                <th className="px-4 py-3">Payment Receipt</th>
+                {/* <th className="px-4 py-3">Payment Receipt</th> */}
                 <th className="px-4 py-3">Order Date</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Tracking Number</th>
@@ -306,69 +319,13 @@ export default function Table() {
                 return (
                   <tr key={order.id} className=" text-gray-700">
                     <td className="px-4 py-3 border">{order.id}</td>
-                    <td className="px-4 py-3 border">
-                      {orderedProducts.map((orderedProduct) => {
-                        const productDetails = orderedProduct.ProductDetails;
-                        const product = productDetails.product;
-                        const photos = product.productGalleries;
-                        return (
-                          <div
-                            key={orderedProduct.id}
-                            className="flex-col items-center text-sm"
-                          >
-                            <Image
-                              onClick={() =>
-                                router.push(`/product/${product.slug}`)
-                              }
-                              priority
-                              className=" h-32 w-auto rounded-3xl border-gray-200 border transform hover:scale-125"
-                              src={`http://localhost:5000/${photos[0].photo}`}
-                              alt={product.name}
-                              width={200}
-                              height={200}
-                            />
-                            <p
-                              className={`h-4 w-4 ml-1 mt-1 border-2 border-stale-500 rounded-full focus:outline-none`}
-                              style={{
-                                backgroundColor: productDetails.color,
-                              }}
-                            ></p>
-                            <p className=" text-bold">
-                              SKU: {productDetails.product.SKU}
-                            </p>
-                            <p className=" text-bold">
-                              Size: {productDetails.size}
-                            </p>
-                            <p className=" text-bold">
-                              Quantity: {orderedProduct.quantity}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </td>
                     <td className="px-4 py-3 border font-semibold">
                       RP {order.total_payment}
                     </td>
-                    <td className="px-4 py-3 border font-semibold">
-                      {order.payment_receipt ? (
-                        <Image
-                          className="w-auto h-auto"
-                          onClick={() =>
-                            router.push(
-                              `http://localhost:5000/${order.payment_receipt}`
-                            )
-                          }
-                          src={`http://localhost:5000/${order.payment_receipt}`}
-                          alt={order.payment_receipt}
-                          height={200}
-                          width={200}
-                        />
-                      ) : null}
-                    </td>
                     <td className="px-4 py-3 border ">{order.order_date}</td>
-                    <td className="px-4 py-3 border ">
+                    <td className="px-4 py-3 border items-center">
                       <p
-                        className="p-2 rounded-md"
+                        className="p-2 rounded-md text-center"
                         defaultValue={order.status}
                         style={{
                           backgroundColor:
@@ -379,8 +336,8 @@ export default function Table() {
                               : order.status === "rejected"
                               ? "#F6AA97"
                               : order.status === "shipped"
-                              ? "#DCD7A0"
-                              : order.status === "completed"
+                              ? "#F7D0AF"
+                              : order.status === "complete"
                               ? "#93EF93"
                               : "Red",
                         }}
@@ -388,7 +345,7 @@ export default function Table() {
                         {order.status}
                       </p>
                     </td>
-                    <td className="p-1 border flex-wrap">
+                    <td className="p-1 border flex-wrap pl-3">
                       {" "}
                       {order.tracking_number || (
                         <form
@@ -411,119 +368,9 @@ export default function Table() {
                       )}{" "}
                     </td>
                     <td className="text-center border">
-                      <button
-                        className="btn"
-                        onClick={() =>
-                          document.getElementById("my_modal_4").showModal()
-                        }
-                      >
-                        VIEW
-                      </button>
-                      {/* MODAL <<<<<<<<<<<<<<<<<<<<<< */}
-                      <dialog id="my_modal_4" className="modal">
-                        <div className="modal-box w-11/12 max-w-5xl">
-                          <div className="md:flex md:items-center mb-3 ">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Order Date</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>{order.order_date}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">address</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>
-                                {order.address.street},{order.address.zip_code}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Total Price</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>Rp. {order.total_price}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              F<p className="font-semibold">Total Weight</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>{order.total_weight} gram</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Courier</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>{order.courier}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Shipping Method</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p className="">{order.shipping_method}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Tracking Number</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>{order.tracking_number}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Shipping Cost</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>Rp. {order.shipping_cost}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Total Cost</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              <p>Rp. {order.total_payment}</p>
-                            </div>
-                          </div>
-                          <div className="md:flex md:items-center mb-3">
-                            <div className="md:w-1/3 my-2">
-                              <p className="font-semibold">Payment Receipt</p>
-                            </div>
-                            <div className="md:w-2/3">
-                              {order.payment_receipt ? (
-                                <Image
-                                  onClick={() =>
-                                    router.push(
-                                      `http://localhost:5000/${order.payment_receipt}`
-                                    )
-                                  }
-                                  src={`http://localhost:5000/${order.payment_receipt}`}
-                                  alt={order.payment_receipt}
-                                  height={200}
-                                  width={200}
-                                />
-                              ) : null}
-                            </div>
-                          </div>
-                          <div className="modal-action">
-                            <form method="dialog">
-                              {/* if there is a button, it will close the modal */}
-                              <button className="btn">Close</button>
-                            </form>
-                          </div>
-                        </div>
-                      </dialog>
+                      <Link href={`order/${order.id}`}>
+                        <button className="btn">VIEW</button>
+                      </Link>
                     </td>
                   </tr>
                 );
@@ -543,7 +390,9 @@ export default function Table() {
               </span>{" "}
               to{" "}
               <span className="font-medium">
-                {(data.currentPage - 1) * data.limit + 1 + data.limit - 1}
+                {data.currentPage * data.limit < data.totalItems
+                  ? data.currentPage * data.limit
+                  : data.totalItems}
               </span>{" "}
               of <span className="font-medium">{data.totalItems}</span> results
             </p>
