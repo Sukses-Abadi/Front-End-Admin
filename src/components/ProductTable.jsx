@@ -5,6 +5,7 @@ import { deleteProduct, getAllProducts } from "@/fetch/products";
 import { getOneSubCategory } from "@/fetch/subCategories";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { debounce } from "lodash";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Swal from "sweetalert2";
 
@@ -168,6 +169,10 @@ export default function ProductTable() {
     });
   };
 
+  const delayedSearch = debounce((value) => {
+    setSearchBar(value);
+  }, 500);
+
   const handleKeywords = (keywords) => {
     const result = keywords.split(",").map((keyword) => {
       return keyword.trim();
@@ -257,7 +262,7 @@ export default function ProductTable() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg shadow-md focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search for items"
               onChange={(e) => {
-                setSearchBar(e.target.value);
+                delayedSearch(e.target.value);
               }}
             />
           </div>
