@@ -123,6 +123,7 @@ export default function ProductTable() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d80032",
       confirmButtonText: "Yes, delete it!",
+      reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
         const deletedProducts = Object.keys(selectedCheckboxes).filter(
@@ -472,6 +473,7 @@ export default function ProductTable() {
                           className="w-2/5 mt-2 ml-auto py-0.5 text-white font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-accent hover:scale-[1.01] transition-all"
                           style={{ fontSize: "13px" }}
                           onClick={() => {
+                            setCurrentPage(1);
                             setFilteredRatings(selectedRatings);
                           }}
                         >
@@ -569,6 +571,7 @@ export default function ProductTable() {
                             className="w-1/4 mt-2 ml-auto py-0.5 text-white font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-accent hover:scale-[1.01] transition-all"
                             style={{ fontSize: "13px" }}
                             onClick={() => {
+                              setCurrentPage(1);
                               setFilteredCategories(selectedCategories);
                             }}
                           >
@@ -676,6 +679,7 @@ export default function ProductTable() {
                             className="w-1/4 mt-2 ml-auto py-0.5 text-white font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-accent hover:scale-[1.01] transition-all"
                             style={{ fontSize: "13px" }}
                             onClick={() => {
+                              setCurrentPage(1);
                               setFilteredSubCategories(selectedSubCategories);
                             }}
                           >
@@ -764,6 +768,7 @@ export default function ProductTable() {
                           className="w-1/4 mt-2 ml-auto py-0.5 text-white font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-accent hover:scale-[1.01] transition-all"
                           style={{ fontSize: "13px" }}
                           onClick={() => {
+                            setCurrentPage(1);
                             setFilteredRestockStatus(selectedRestockStatus);
                           }}
                         >
@@ -851,6 +856,7 @@ export default function ProductTable() {
                           className="w-1/4 mt-2 ml-auto py-0.5 text-white font-medium text-center rounded-md shadow-sm shadow-gray-300 bg-accent hover:scale-[1.01] transition-all"
                           style={{ fontSize: "13px" }}
                           onClick={() => {
+                            setCurrentPage(1);
                             setFilteredDiscountStatus(selectedDiscountStatus);
                           }}
                         >
