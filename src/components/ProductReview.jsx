@@ -314,7 +314,7 @@ export default function ProductReview({ params }) {
                     </button>
                   </div>
                   <div id="menu2" className="hidden md:block">
-                    <p className="mt-3 text-base leading-normal text-gray-600 dark:text-white w-full md:w-9/12 xl:w-5/6">
+                    <p className="mt-3 text-base leading-normal text-gray-800 dark:text-white w-full md:w-9/12 xl:w-5/6">
                       {review.review_text}
                     </p>
                     <div className="mt-4 flex flex-row justify-start items-start space-x-4">
@@ -344,10 +344,10 @@ export default function ProductReview({ params }) {
                       )}
 
                       <div className="flex flex-col justify-start items-start space-y-2">
-                        <p className="text-sm font-medium leading-none text-gray-800 dark:text-white">
+                        <p className="text-sm font-medium leading-none text-gray-900 dark:text-white">
                           {review.user.username}
                         </p>
-                        <p className="text-xs leading-none text-gray-600 dark:text-white">
+                        <p className="text-xs leading-none text-gray-700 dark:text-white">
                           {formatDate(review.created_at)}
                         </p>
                       </div>
