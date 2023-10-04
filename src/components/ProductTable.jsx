@@ -26,6 +26,7 @@ export default function ProductTable() {
   const [filteredSortOrder, setFilteredSortOrder] = useState("desc");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
+  const [isFilterButtonsChecked, setIsFilterButtonsChecked] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const [prevPage, setPrevPage] = useState(null);
@@ -115,6 +116,10 @@ export default function ProductTable() {
     }
   };
 
+  const delayedSearch = debounce((value) => {
+    setSearchBar(value);
+  }, 500);
+
   const handleDeleteProducts = async () => {
     Swal.fire({
       title: "Are you sure?",
@@ -169,10 +174,6 @@ export default function ProductTable() {
     });
   };
 
-  const delayedSearch = debounce((value) => {
-    setSearchBar(value);
-  }, 500);
-
   const handleKeywords = (keywords) => {
     const result = keywords.split(",").map((keyword) => {
       return keyword.trim();
@@ -216,10 +217,24 @@ export default function ProductTable() {
   };
 
   useEffect(() => {
+    const filterButtonsName = [
+      "ratingsFilter",
+      "categoryFilter",
+      "subCategoryFilter",
+      "restockStatus",
+      "discountStatus",
+    ];
+
+    const filterButtonsChecked = filterButtonsName.some((buttonName) => {
+      const buttons = document.querySelectorAll(`input[name="${buttonName}"]`);
+      return Array.from(buttons).some((button) => button.checked);
+    });
+
     setProductLoaded(false);
     fetchProducts(queryParams);
     fetchCategories();
 
+    setIsFilterButtonsChecked(filterButtonsChecked);
     setSelectedCheckboxes({});
   }, [
     itemsPerPage,
@@ -237,7 +252,7 @@ export default function ProductTable() {
   return (
     <div className="max-w-7xl mx-auto mt-5">
       <div className="relative shadow-md sm:rounded-lg mb-28">
-        <div className="p-4 flex flex-col md:flex-row items-start">
+        <div className="p-4 flex flex-col items-start">
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
@@ -266,33 +281,33 @@ export default function ProductTable() {
               }}
             />
           </div>
-          <div className="flex items-center mt-3 md:mt-1 w-full">
-            <button
-              type="button"
-              className="inline-flex items-center ml-0 md:ml-5 py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-orange-300 to-accent rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform whitespace-nowrap"
-              onClick={() => router.push("/products/create")}
-            >
-              <svg
-                className="mr-2 w-5 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+          <div className="flex items-start flex-col sm:flex-row mt-3 w-full">
+            <div className="flex items-center">
+              <button
+                type="button"
+                className="inline-flex items-center py-2 pl-2 pr-3 text-sm font-medium text-center text-white bg-gradient-to-br from-orange-300 to-accent rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform whitespace-nowrap"
+                onClick={() => router.push("/products/create")}
               >
-                <path
-                  fillRule="evenodd"
-                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              Add product
-            </button>
-            <div className="flex items-center ml-2 md:ml-auto">
+                <svg
+                  className="mr-2 w-5 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Add product
+              </button>
               {Object.values(selectedCheckboxes).some(
                 (isChecked) => isChecked
               ) && (
                 <button
                   type="button"
-                  className="inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+                  className="inline-flex items-center py-2 pl-2 pr-3 ml-1 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
                   onClick={handleDeleteProducts}
                 >
                   <svg
@@ -310,74 +325,110 @@ export default function ProductTable() {
                   Delete
                 </button>
               )}
-              {/* Add the filter button here */}
-              <div className="relative inline-block text-left">
+              {isFilterButtonsChecked && (
                 <button
-                  id="productSortDropdown"
-                  className="flex items-center justify-center py-2.5 px-4 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                   type="button"
+                  className="inline-flex items-center ml-1 py-2.5 px-2.5 text-sm font-medium text-center text-white bg-gradient-to-r from-slate-400 to-slate-500 rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform whitespace-nowrap"
                   onClick={() => {
-                    setIsDropdownOpen((prevState) => ({
-                      ...prevState,
-                      ["productSortDropdown"]:
-                        !prevState["productSortDropdown"],
-                    }));
+                    const filterButtonsName = [
+                      "ratingsFilter",
+                      "categoryFilter",
+                      "subCategoryFilter",
+                      "restockStatus",
+                      "discountStatus",
+                    ];
+
+                    filterButtonsName.forEach((buttonName) => {
+                      const buttons = document.querySelectorAll(
+                        `input[name="${buttonName}"]`
+                      );
+                      buttons?.forEach((button) => {
+                        button.checked = false;
+                      });
+                    });
+
+                    setSelectedCategories([]);
+                    setSelectedSubCategories([]);
+                    setSelectedDiscountStatus(null);
+                    setSelectedRestockStatus(null);
+                    setSelectedRatings([]);
+
+                    setFilteredCategories(null);
+                    setFilteredSubCategories(null);
+                    setFilteredDiscountStatus(null);
+                    setFilteredRestockStatus(null);
+                    setFilteredRatings(null);
                   }}
                 >
-                  <svg
-                    className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 mr-2.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
-                  </svg>
-                  {filteredSortOrder === "asc" ? "Oldest" : "Latest"}
-                  <svg
-                    className="-mr-1 ml-1.5 w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      clipRule="evenodd"
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    />
-                  </svg>
+                  Clear Filter
                 </button>
-                <div
-                  className={`${
-                    isDropdownOpen["productSortDropdown"] ? "block" : "hidden"
-                  } absolute z-10 ml-2 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}
-                  style={{ maxWidth: "128px" }}
+              )}
+            </div>
+            <div className="relative inline-block text-left mt-2 sm:mt-0 sm:ml-auto">
+              <button
+                id="productSortDropdown"
+                className="flex items-center justify-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                type="button"
+                onClick={() => {
+                  setIsDropdownOpen((prevState) => ({
+                    ...prevState,
+                    ["productSortDropdown"]: !prevState["productSortDropdown"],
+                  }));
+                }}
+              >
+                <svg
+                  className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 mr-2.5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <ul className="p-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
-                    {["Latest", "Oldest"].map((option) => (
-                      <li key={option}>
-                        <div
-                          className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                          onClick={() => {
-                            setFilteredSortBy("created_at");
-                            setFilteredSortOrder(
-                              option === "Latest" ? "desc" : "asc"
-                            );
+                  <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
+                </svg>
+                {filteredSortOrder === "asc" ? "Oldest" : "Latest"}
+                <svg
+                  className="-mr-1 ml-1.5 w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  />
+                </svg>
+              </button>
+              <div
+                className={`${
+                  isDropdownOpen["productSortDropdown"] ? "block" : "hidden"
+                } absolute z-10 ml-2 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}
+                style={{ maxWidth: "128px" }}
+              >
+                <ul className="p-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                  {["Latest", "Oldest"].map((option) => (
+                    <li key={option}>
+                      <div
+                        className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                        onClick={() => {
+                          setFilteredSortBy("created_at");
+                          setFilteredSortOrder(
+                            option === "Latest" ? "desc" : "asc"
+                          );
 
-                            setIsDropdownOpen((prevState) => ({
-                              ...prevState,
-                              ["productSortDropdown"]:
-                                !prevState["productSortDropdown"],
-                            }));
-                          }}
-                        >
-                          {option}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                          setIsDropdownOpen((prevState) => ({
+                            ...prevState,
+                            ["productSortDropdown"]:
+                              !prevState["productSortDropdown"],
+                          }));
+                        }}
+                      >
+                        {option}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
