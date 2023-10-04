@@ -1,8 +1,7 @@
 "use client";
 
-import { getAllCategory, getOneCategory } from "@/fetch/categories";
+import { getAllCategory } from "@/fetch/categories";
 import { deleteProduct, getAllProducts } from "@/fetch/products";
-import { getOneSubCategory } from "@/fetch/subCategories";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { debounce } from "lodash";
@@ -58,35 +57,16 @@ export default function ProductTable() {
     sortOrder: filteredSortOrder,
   };
 
-  const fetchProductCategory = async (category_id, sub_category_id) => {
-    try {
-      const category = await getOneCategory(category_id);
-      const subCategory = await getOneSubCategory(sub_category_id);
-
-      return { categoryName: category.name, subCategoryName: subCategory.name };
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const fetchProducts = async (params) => {
     try {
       const response = await getAllProducts(params);
       const productsWithCategoryName = response.products
         ? await Promise.all(
             response.products.map(async (product) => {
-              const { categoryName, subCategoryName } =
-                await fetchProductCategory(
-                  product.category_id,
-                  product.sub_category_id
-                );
-
               const countReviews = product.reviews.length;
 
               return {
                 ...product,
-                categoryName,
-                subCategoryName,
                 countReviews,
               };
             })
@@ -989,10 +969,10 @@ export default function ProductTable() {
                         })}
                       </td>
                       <td className="px-6 whitespace-nowrap">
-                        {product.categoryName}
+                        {product.Category.name}
                       </td>
                       <td className="px-6 whitespace-nowrap">
-                        {product.subCategoryName}
+                        {product.SubCategory.name}
                       </td>
                       <td className="px-6 whitespace-nowrap">
                         {product.productDetails.some(
