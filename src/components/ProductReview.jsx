@@ -168,13 +168,13 @@ export default function ProductReview({ params }) {
     <div className="py-12 px-4 md:px-6 2xl:px-0 2xl:container 2xl:mx-auto flex justify-center items-center">
       <div className="flex flex-col justify-start items-start w-full space-y-5">
         <div className="flex justify-start items-center w-full">
-          <p className="text-2xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800 dark:text-white ">
+          <p className="text-2xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
             Reviews
           </p>
           <div className="relative inline-block text-left ml-auto">
             <button
               id="ratingFilterDropdown"
-              className="flex items-center justify-center py-2.5 px-3 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              className="flex items-center justify-center py-2.5 px-3 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10"
               type="button"
               onClick={() => {
                 setIsDropdownOpen((prevState) => ({
@@ -216,7 +216,7 @@ export default function ProductReview({ params }) {
             <div
               className={`${
                 isDropdownOpen["ratingFilterDropdown"] ? "block" : "hidden"
-              } absolute z-10 ml-2 mt-1 w-32 bg-base-100 rounded-md shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-content menu p-2`}
+              } absolute z-10 ml-2 mt-1 w-32 bg-base-100 rounded-md shadow dropdown-content menu p-2`}
             >
               <div style={{ maxHeight: "100px", overflowY: "auto" }}>
                 {["★1", "★2", "★3", "★4", "★5"].map((status, index) => {
@@ -280,7 +280,7 @@ export default function ProductReview({ params }) {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-start items-start flex-col bg-gray-50 dark:bg-gray-800 px-8 py-5">
+        <div className="w-full flex justify-start items-start flex-col bg-gray-50 px-8 py-5">
           {!reviewLoaded ? (
             <div>Loading...</div>
           ) : (
@@ -288,7 +288,7 @@ export default function ProductReview({ params }) {
               return (
                 <div key={review.id} className="w-full">
                   {index !== 0 && (
-                    <hr className="border-t border-gray-200 dark:bg-gray-950 my-3" />
+                    <hr className="border-t border-gray-200 my-3" />
                   )}
                   <div className="flex items-center justify-between w-full">
                     <div className="flex ml-auto">
@@ -314,7 +314,7 @@ export default function ProductReview({ params }) {
                     </button>
                   </div>
                   <div id="menu2" className="hidden md:block">
-                    <p className="mt-3 text-base leading-normal text-gray-800 dark:text-white w-full md:w-9/12 xl:w-5/6">
+                    <p className="mt-3 text-base leading-normal text-gray-800 w-full md:w-9/12 xl:w-5/6">
                       {review.review_text}
                     </p>
                     <div className="mt-4 flex flex-row justify-start items-start space-x-4">
@@ -344,10 +344,10 @@ export default function ProductReview({ params }) {
                       )}
 
                       <div className="flex flex-col justify-start items-start space-y-2">
-                        <p className="text-sm font-medium leading-none text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium leading-none text-gray-900">
                           {review.user.username}
                         </p>
-                        <p className="text-xs leading-none text-gray-700 dark:text-white">
+                        <p className="text-xs leading-none text-gray-700">
                           {formatDate(review.created_at)}
                         </p>
                       </div>
@@ -374,7 +374,7 @@ export default function ProductReview({ params }) {
               </p>
               {/* Add the show entries button here */}
               <div className="relative inline-block text-left">
-                <div className="flex items-center justify-center py-1.5 px-2 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <div className="flex items-center justify-center py-1.5 px-2 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 focus:z-10">
                   <div className="flex font-normal text-sm text-gray-700">
                     Show:
                     <button
@@ -412,17 +412,17 @@ export default function ProductReview({ params }) {
                     isDropdownOpen["entriesPerPageDropdown"]
                       ? "block"
                       : "hidden"
-                  } absolute z-10 ml-11 mt-0.5 bg-white divide-y divide-gray-100 rounded-sm shadow dark:bg-gray-700 dark:divide-gray-600`}
+                  } absolute z-10 ml-11 mt-0.5 bg-white divide-y divide-gray-100 rounded-sm shadow`}
                   style={{ maxWidth: "128px" }}
                 >
-                  <ul className="py-1 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                  <ul className="py-1 text-sm cursor-pointer">
                     {[1, 5, 10, 20].map((option) => (
                       <li key={option}>
                         <div
                           className={`flex items-center rounded-sm px-4 ${
                             itemsPerPage === option
                               ? "bg-blue-500 text-white"
-                              : "hover:bg-gray-100 dark:hover:bg-gray-600"
+                              : "hover:bg-gray-100"
                           }`}
                           onClick={() => {
                             setCurrentPage(1);

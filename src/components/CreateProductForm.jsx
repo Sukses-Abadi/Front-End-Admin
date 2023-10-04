@@ -308,7 +308,7 @@ export default function CreateProductForm() {
                 </label>
                 <div className="overflow-x-auto">
                   <table className="min-w-full border-gray-200">
-                    <thead className="text-sm text-left text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead className="text-sm text-left text-gray-700 bg-gray-50">
                       <tr className="bg-gray-100 border-y border-gray-200">
                         <th scope="col" className="py-1 px-4 w-1/4">
                           Color
