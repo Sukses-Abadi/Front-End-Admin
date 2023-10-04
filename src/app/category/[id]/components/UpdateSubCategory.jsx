@@ -83,7 +83,7 @@ export default function UpdateSubCategory({ subCategories, categories }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <label className="label font-bold">category_id</label>
+              <label className="label font-bold">Category</label>
               <select
                 className="select select-sm sm:select-md select-bordered"
                 value={categoryId}
