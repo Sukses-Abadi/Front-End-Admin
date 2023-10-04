@@ -450,7 +450,7 @@ export default function EditProductForm({ params }) {
                             <td className="text-center">
                               <button
                                 type="button"
-                                className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-secondary to-error shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
+                                className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-red-400 to-error shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
                                 onClick={() => {
                                   const updatedDetails = productDetails.filter(
                                     (_, prevIndex) => prevIndex !== index
@@ -565,7 +565,7 @@ export default function EditProductForm({ params }) {
                         className="max-w-full h-auto"
                       />
                       <button
-                        className="absolute top-2 right-2 p-1 text-white rounded-full bg-gradient-to-br from-secondary to-error shadow-md shadow-gray-300 hover:scale-[1.02]"
+                        className="absolute top-2 right-2 p-1 text-white rounded-full bg-gradient-to-br from-red-400 to-error shadow-md shadow-gray-300 hover:scale-[1.02]"
                         onClick={() => {
                           const updatedProductGalleries = [...productGalleries];
 

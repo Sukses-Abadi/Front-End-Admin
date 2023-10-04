@@ -330,7 +330,7 @@ export default function CreateProductForm() {
                             <td className="text-center">
                               <button
                                 type="button"
-                                className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-secondary to-error shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
+                                className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-red-400 to-error shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
                                 onClick={() => {
                                   const updatedDetails = productDetails.filter(
                                     (_, prevIndex) => prevIndex !== index
