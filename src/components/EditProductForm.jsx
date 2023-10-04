@@ -150,14 +150,13 @@ export default function EditProductForm({ params }) {
       }
     });
 
-    // update product
     try {
       const paramsObj = {
         name: productName,
         SKU: sku,
         description,
         keyword: keywords,
-        discount: discount ? +discount : null,
+        discount: discount ? (+discount === 0 ? null : +discount) : null,
         weight: +weight,
         category_id: +selectedCategory,
         sub_category_id: +selectedSubCategory,
