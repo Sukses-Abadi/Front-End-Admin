@@ -17,9 +17,9 @@ export default async function SubCategory({ params }) {
     <div className="flex justify-center items-center h-screen">
       <div className="w-3/4">
         <h1 className="text-4xl font-bold text-center">List Sub-Category</h1>
-        <p className="ml-3 font-thin text-center mb-8">
+        {/* <p className="ml-3 font-thin text-center mb-8">
           category_id {categoryId}
-        </p>
+        </p> */}
         <div>
           <AddSubCategory categories={categories} />
         </div>
