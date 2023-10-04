@@ -156,8 +156,8 @@ export default function EditProductForm({ params }) {
         SKU: sku,
         description,
         keyword: keywords,
-        discount: discount ? (+discount === 0 ? null : +discount) : null,
-        weight: +weight,
+        discount: discount ? discount : null,
+        weight: weight,
         category_id: +selectedCategory,
         sub_category_id: +selectedSubCategory,
         product_details: updatedProductDetails,
@@ -305,14 +305,20 @@ export default function EditProductForm({ params }) {
                   Weight (gram)
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="weight"
                   id="weight"
-                  value={weight ? weight : 0}
+                  value={weight || 0}
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="0"
-                  min="0" // Set minimum value to 0 to prevent negative values
-                  onChange={(e) => setWeight(e.target.value)}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const numericValue =
+                      isNaN(parseInt(inputValue)) || parseInt(inputValue) < 0
+                        ? 0
+                        : parseInt(inputValue);
+                    setWeight(numericValue);
+                  }}
                   required
                 />
               </div>
@@ -324,14 +330,20 @@ export default function EditProductForm({ params }) {
                   Discount (Rp)
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="discount"
                   id="discount"
-                  value={discount ? discount : ""}
+                  value={discount || ""}
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="0"
-                  min="0" // Set minimum value to 0 to prevent negative values
-                  onChange={(e) => setDiscount(e.target.value)}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const numericValue =
+                      isNaN(parseInt(inputValue)) || parseInt(inputValue) <= 0
+                        ? ""
+                        : parseInt(inputValue);
+                    setDiscount(numericValue);
+                  }}
                 />
               </div>
               <div className="col-span-6 sm:col-span-3">
@@ -407,14 +419,21 @@ export default function EditProductForm({ params }) {
                             </td>
                             <td className="text-sm px-4 whitespace-nowrap">
                               <input
-                                type="number"
-                                value={detail.price ? detail.price : 0}
+                                type="text"
+                                value={detail.price || 0}
                                 className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
-                                min="0" // Set minimum value to 0 to prevent negative values
+                                placeholder="0"
                                 onChange={(e) => {
                                   {
+                                    const inputValue = e.target.value;
+                                    const numericValue =
+                                      isNaN(parseInt(inputValue)) ||
+                                      parseInt(inputValue) < 0
+                                        ? 0
+                                        : parseInt(inputValue);
+
                                     const updatedPrice = detail;
-                                    updatedPrice.price = +e.target.value;
+                                    updatedPrice.price = numericValue;
 
                                     const updatedDetails = [
                                       ...updatedProductDetails,
@@ -428,14 +447,21 @@ export default function EditProductForm({ params }) {
                             </td>
                             <td className="text-sm px-4 whitespace-nowrap">
                               <input
-                                type="number"
-                                value={detail.stock ? detail.stock : 0}
+                                type="text"
+                                value={detail.stock || 0}
                                 className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
-                                min="0" // Set minimum value to 0 to prevent negative values
+                                placeholder="0"
                                 onChange={(e) => {
                                   {
+                                    const inputValue = e.target.value;
+                                    const numericValue =
+                                      isNaN(parseInt(inputValue)) ||
+                                      parseInt(inputValue) < 0
+                                        ? 0
+                                        : parseInt(inputValue);
+
                                     const updatedStock = detail;
-                                    updatedStock.stock = +e.target.value;
+                                    updatedStock.stock = numericValue;
 
                                     const updatedDetails = [
                                       ...updatedProductDetails,
@@ -495,24 +521,40 @@ export default function EditProductForm({ params }) {
                         </td>
                         <td>
                           <input
-                            type="number"
+                            type="text"
                             name="price"
                             id="price"
                             className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="0"
-                            min="0" // Set minimum value to 0 to prevent negative values
-                            onChange={(e) => setPrice(e.target.value)}
+                            onChange={(e) => {
+                              const inputValue = e.target.value;
+                              const numericValue =
+                                isNaN(parseInt(inputValue)) ||
+                                parseInt(inputValue) < 0
+                                  ? 0
+                                  : parseInt(inputValue);
+
+                              setPrice(numericValue);
+                            }}
                           />
                         </td>
                         <td>
                           <input
-                            type="number"
+                            type="text"
                             name="stock"
                             id="stock"
                             className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="0"
-                            min="0" // Set minimum value to 0 to prevent negative values
-                            onChange={(e) => setStock(e.target.value)}
+                            onChange={(e) => {
+                              const inputValue = e.target.value;
+                              const numericValue =
+                                isNaN(parseInt(inputValue)) ||
+                                parseInt(inputValue) < 0
+                                  ? 0
+                                  : parseInt(inputValue);
+
+                              setStock(numericValue);
+                            }}
                           />
                         </td>
                         <td className="text-center">
