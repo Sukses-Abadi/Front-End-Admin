@@ -287,7 +287,7 @@ export default function ProductTable() {
               ) && (
                 <button
                   type="button"
-                  className="inline-flex items-center py-2 pl-2 pr-3 ml-1 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+                  className="inline-flex items-center py-2 pl-2 pr-3 ml-1 text-sm font-medium text-center text-white bg-gradient-to-br from-red-400 to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
                   onClick={handleDeleteProducts}
                 >
                   <svg
@@ -1149,7 +1149,7 @@ export default function ProductTable() {
                       }
                       className={`relative z-10 inline-flex items-center px-4 py-2 text-xs font-semibold ${
                         currentPage === pageNumber
-                          ? "bg-secondary text-white"
+                          ? "bg-red-400 text-white"
                           : "text-gray-900 hover:bg-gray-50"
                       } ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0`}
                       onClick={() => {

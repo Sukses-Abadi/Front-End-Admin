@@ -469,7 +469,7 @@ export default function ProductReview({ params }) {
                       }
                       className={`relative z-10 inline-flex items-center px-4 py-2 text-xs font-semibold ${
                         currentPage === pageNumber
-                          ? "bg-secondary text-white"
+                          ? "bg-red-400 text-white"
                           : "text-gray-900 hover:bg-gray-50"
                       } ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0`}
                       onClick={() => {

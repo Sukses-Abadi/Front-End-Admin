@@ -61,7 +61,7 @@ export default function Page() {
         </div>
         <div className="text-center mt-6">
           <button
-            className="py-3 w-60 text-xl text-white font-semibold bg-secondary rounded-2xl"
+            className="py-3 w-60 text-xl text-white font-semibold bg-red-400 rounded-2xl"
             onClick={handleSubmit}
           >
             Sign Up
