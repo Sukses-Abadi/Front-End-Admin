@@ -4,6 +4,7 @@ import { deleteReview, getAllReviews } from "@/fetch/reviews";
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 export default function ProductReview({ params }) {
   const { id: productId } = params;
@@ -320,12 +321,13 @@ export default function ProductReview({ params }) {
                     <div className="mt-4 flex flex-row justify-start items-start space-x-4">
                       {review.image && (
                         <div>
-                          <img
+                          <Image
                             src={`http://localhost:5000/${review.image}`}
                             className="w-1/4 h-1/4"
                             onError={(e) => {
                               e.target.style.display = "none";
                             }}
+                            alt=""
                           />
                         </div>
                       )}
@@ -333,12 +335,13 @@ export default function ProductReview({ params }) {
                     <div className="mt-6 flex justify-start items-center flex-row mb-2">
                       {review.user.photo && (
                         <div>
-                          <img
+                          <Image
                             src={`http://localhost:5000/${review.user.photo}`}
                             className="w-9 h-9 mr-2.5 rounded-full"
                             onError={(e) => {
                               e.target.style.display = "none";
                             }}
+                            alt=""
                           />
                         </div>
                       )}

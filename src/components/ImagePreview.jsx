@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const ImagePreview = ({ imagePreview, handleRemoveImage }) => {
@@ -18,7 +19,7 @@ const ImagePreview = ({ imagePreview, handleRemoveImage }) => {
           key={index}
           className="flex items-center bg-gray-100 p-2 rounded-lg mb-2"
         >
-          <img
+          <Image
             src={image.previewURL}
             alt={image.name}
             className="w-16 h-auto rounded-lg mr-2"

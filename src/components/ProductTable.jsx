@@ -1178,8 +1178,6 @@ export default function ProductTable() {
           </div>
         </div>
       </div>
-
-      <script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
     </div>
   );
 }

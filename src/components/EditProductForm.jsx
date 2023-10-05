@@ -6,6 +6,7 @@ import { uploadFiles } from "@/fetch/files";
 import { addProductDetail, deleteProductDetail } from "@/fetch/productDetails";
 import { addProductImage, deleteProductImage } from "@/fetch/productGalleries";
 import { getSingleProduct, updateProduct } from "@/fetch/products";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -601,7 +602,7 @@ export default function EditProductForm({ params }) {
                 <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {productGalleries?.map((item, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={`http://localhost:5000/${item.photo}`}
                         alt={`Product Image ${index + 1}`}
                         className="max-w-full h-auto"
