@@ -31,7 +31,7 @@ export default function Details({ category }) {
           <h3 className="ml-3 text-3xl mb-8 font-bold ">
             Sub Category {category.name}
           </h3>
-          <p className="ml-3 font-thin -mt-8 mb-8">category_id {categoryId}</p>
+          {/* <p className="ml-3 font-thin -mt-8 mb-8">category_id {categoryId}</p> */}
           {isOpen && category ? (
             <>
               <div className="overflow-x-auto">

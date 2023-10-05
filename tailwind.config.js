@@ -21,13 +21,13 @@ module.exports = {
         mytheme: {
           primary: "#2D5B76",
 
-          secondary: "#DF6B67",
+          secondary: "#ffff",
 
           accent: "#E9AC6C",
 
           neutral: "#568995",
 
-          "base-100": "#ffff",
+          "base-100": "#f6f6f6",
 
           info: "#0ca6e9",
 

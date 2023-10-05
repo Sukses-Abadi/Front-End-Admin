@@ -239,7 +239,7 @@ export default function ProductTable() {
           <div className="relative mt-1">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                className="w-5 h-5 text-gray-500"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +254,7 @@ export default function ProductTable() {
             <input
               type="text"
               id="table-search"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg shadow-md focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg shadow-md focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5"
               placeholder="Search for items"
               onChange={(e) => {
                 delayedSearch(e.target.value);
@@ -287,7 +287,7 @@ export default function ProductTable() {
               ) && (
                 <button
                   type="button"
-                  className="inline-flex items-center py-2 pl-2 pr-3 ml-1 text-sm font-medium text-center text-white bg-gradient-to-br from-secondary to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
+                  className="inline-flex items-center py-2 pl-2 pr-3 ml-1 text-sm font-medium text-center text-white bg-gradient-to-br from-red-400 to-error rounded-lg shadow-md shadow-gray-300 hover:scale-[1.02] transition-transform"
                   onClick={handleDeleteProducts}
                 >
                   <svg
@@ -347,7 +347,7 @@ export default function ProductTable() {
             <div className="relative inline-block text-left mt-2 sm:mt-0 sm:ml-auto">
               <button
                 id="productSortDropdown"
-                className="flex items-center justify-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                className="flex items-center justify-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10"
                 type="button"
                 onClick={() => {
                   setIsDropdownOpen((prevState) => ({
@@ -357,7 +357,7 @@ export default function ProductTable() {
                 }}
               >
                 <svg
-                  className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 mr-2.5"
+                  className="w-3.5 h-3.5 text-gray-500 mr-2.5"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -383,14 +383,14 @@ export default function ProductTable() {
               <div
                 className={`${
                   isDropdownOpen["productSortDropdown"] ? "block" : "hidden"
-                } absolute z-10 ml-2 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}
+                } absolute z-10 ml-2 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow`}
                 style={{ maxWidth: "128px" }}
               >
-                <ul className="p-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                <ul className="p-2 text-sm text-gray-700 cursor-pointer">
                   {["Latest", "Oldest"].map((option) => (
                     <li key={option}>
                       <div
-                        className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
+                        className="flex items-center p-2 rounded hover:bg-gray-100"
                         onClick={() => {
                           setFilteredSortBy("created_at");
                           setFilteredSortOrder(
@@ -418,7 +418,7 @@ export default function ProductTable() {
           style={{ minHeight: "200px", maxHeight: "500px" }}
         >
           <table className="table">
-            <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-sm text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th>
                   <label>
@@ -1054,7 +1054,7 @@ export default function ProductTable() {
               </p>
               {/* Add the show entries button here */}
               <div className="relative inline-block text-left">
-                <div className="flex items-center justify-center py-1.5 px-2 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                <div className="flex items-center justify-center py-1.5 px-2 ml-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-md border border-gray-200 focus:z-10">
                   <div className="flex font-normal text-sm text-gray-700">
                     Show:
                     <button
@@ -1092,17 +1092,17 @@ export default function ProductTable() {
                     isDropdownOpen["entriesPerPageDropdown"]
                       ? "block"
                       : "hidden"
-                  } absolute z-10 ml-11 mt-0.5 bg-white divide-y divide-gray-100 rounded-sm shadow dark:bg-gray-700 dark:divide-gray-600`}
+                  } absolute z-10 ml-11 mt-0.5 bg-white divide-y divide-gray-100 rounded-sm shadow`}
                   style={{ maxWidth: "128px" }}
                 >
-                  <ul className="py-1 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                  <ul className="py-1 text-sm text-gray-700 cursor-pointer">
                     {[2, 10, 20, 50].map((option) => (
                       <li key={option}>
                         <div
                           className={`flex items-center rounded-sm px-4 ${
                             itemsPerPage === option
                               ? "bg-blue-500 text-white"
-                              : "hover:bg-gray-100 dark:hover:bg-gray-600"
+                              : "hover:bg-gray-100"
                           }`}
                           onClick={() => {
                             setCurrentPage(1);
@@ -1149,7 +1149,7 @@ export default function ProductTable() {
                       }
                       className={`relative z-10 inline-flex items-center px-4 py-2 text-xs font-semibold ${
                         currentPage === pageNumber
-                          ? "bg-secondary text-white"
+                          ? "bg-red-400 text-white"
                           : "text-gray-900 hover:bg-gray-50"
                       } ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0`}
                       onClick={() => {
