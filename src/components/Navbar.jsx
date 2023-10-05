@@ -67,7 +67,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      <div className="flex-1 mx-5">
+<div className="flex-1 mx-5">
         <Link href={"/"}>
           <Image src={logo} alt="" width={200} height={200} />
         </Link>
