@@ -67,7 +67,9 @@ export default function Navbar() {
         </div>
       </div>
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">SA-Apparel</a>
+        <Link href={"/"} className="btn btn-ghost normal-case text-xl">
+          SA-Apparel
+        </Link>
       </div>
       {/* <div className="flex-none">
         <button className="btn btn-ghost btn-circle">
