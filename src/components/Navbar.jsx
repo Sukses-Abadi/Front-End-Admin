@@ -67,9 +67,9 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      <div className="flex-1">
-        <Link href={"/"} className="btn btn-ghost normal-case text-xl">
-          SA-Apparel
+<div className="flex-1 mx-5">
+        <Link href={"/"}>
+          <Image src={logo} alt="" width={200} height={200} />
         </Link>
       </div>
     </div>
