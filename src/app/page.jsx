@@ -80,24 +80,24 @@ export default async function Home() {
                 </div>
               </Link>
               <Link href={"/products"}>
-              <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
-                <h2 className="items-center text-center font-semibold text-6xl">
-                  {dataProducts.products.length}
-                </h2>
-                <p className="items-center text-center text-lg">
-                  Total Products
-                </p>
-              </div>
+                <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
+                  <h2 className="items-center text-center font-semibold text-6xl">
+                    {dataProducts.products.length}
+                  </h2>
+                  <p className="items-center text-center text-lg">
+                    Total Products
+                  </p>
+                </div>
               </Link>
               <Link href={"/order"}>
-              <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
-                <h2 className="items-center text-center font-semibold text-6xl">
-                  {formatCurrency(todayIncome)}
-                </h2>
-                <p className="items-center text-center text-lg">
-                  Estimated Earnings Today
-                </p>
-              </div>
+                <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
+                  <h2 className="items-center text-center font-semibold text-6xl">
+                    {formatCurrency(todayIncome)}
+                  </h2>
+                  <p className="items-center text-center text-lg">
+                    Estimated Earnings Today
+                  </p>
+                </div>
               </Link>
             </div>
           </div>
