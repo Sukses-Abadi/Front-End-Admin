@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export default function OrderTable({ data }) {
@@ -34,18 +35,20 @@ export default function OrderTable({ data }) {
             return (
               <tr key={product.id}>
                 <td className=" items-center  flex font-mono font-semibold py-8 border-b-2">
-                  <Image
-                    className="px-3"
-                    src={photoUrl}
-                    alt=""
-                    width={100}
-                    height={100}
-                  ></Image>
-                  <div className="text-sm">
-                    <h1>{name}</h1>
-                    <h1>Size: {size}</h1>
-                    <h1>Color: {color}</h1>
-                  </div>
+                  <Link href={`/products/${product.id}`}>
+                    <Image
+                      className="px-3"
+                      src={photoUrl}
+                      alt=""
+                      width={100}
+                      height={100}
+                    ></Image>
+                    <div className="text-sm">
+                      <h1>{name}</h1>
+                      <h1>Size: {size}</h1>
+                      <h1>Color: {color}</h1>
+                    </div>
+                  </Link>
                 </td>
                 <td className="text-center font-mono font-semibold py-8 border-b-2">
                   x{qty}

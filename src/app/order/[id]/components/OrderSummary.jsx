@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function OrderSummary({ data }) {
-  // console.log(data);
   const timestamp = data.order_date;
   const dateObject = new Date(timestamp);
 

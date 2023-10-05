@@ -9,7 +9,6 @@ export default async function Page() {
   if (!cookies().get(`adminAccessToken`)) {
     redirect(`/login`);
   }
-  // console.log("page server");
   const res = await fetchWithTokenServer("cms/order", "GET");
   if (res === "Unauthorized") {
     redirect("/logout");

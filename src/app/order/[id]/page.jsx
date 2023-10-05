@@ -22,7 +22,6 @@ export default async function Page({ params }) {
     redirect("/logout");
   }
   const data = res.data;
-  // console.log(data);
   if (!data) return;
   return (
     <div className="p-5">
