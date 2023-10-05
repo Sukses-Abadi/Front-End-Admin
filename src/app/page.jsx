@@ -30,8 +30,7 @@ export default async function Home() {
       return (todayIncome / 1000000).toFixed(1) + "M";
     } else if (todayIncome >= 100000) {
       const thousands = Math.floor(todayIncome / 1000);
-      const hundreds = todayIncome % 1000;
-      return thousands + "K" + (hundreds > 0 ? "+" : "");
+      return thousands + "K";
     } else {
       return todayIncome.toString();
     }
@@ -79,16 +78,6 @@ export default async function Home() {
                   </p>
                 </div>
               </Link>
-              <Link href={"/products"}>
-                <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
-                  <h2 className="items-center text-center font-semibold text-6xl">
-                    {dataProducts.products.length}
-                  </h2>
-                  <p className="items-center text-center text-lg">
-                    Total Products
-                  </p>
-                </div>
-              </Link>
               <Link href={"/order"}>
                 <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
                   <h2 className="items-center text-center font-semibold text-6xl">
@@ -96,6 +85,16 @@ export default async function Home() {
                   </h2>
                   <p className="items-center text-center text-lg">
                     Estimated Earnings Today
+                  </p>
+                </div>
+              </Link>
+              <Link href={"/products"}>
+                <div className="bg-white hover:bg-gray-200  card w-52 h-24 mb-6 shadow-xl">
+                  <h2 className="items-center text-center font-semibold text-6xl">
+                    {dataProducts.products.length}
+                  </h2>
+                  <p className="items-center text-center text-lg">
+                    Total Products
                   </p>
                 </div>
               </Link>
