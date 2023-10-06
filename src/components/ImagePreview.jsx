@@ -20,6 +20,8 @@ const ImagePreview = ({ imagePreview, handleRemoveImage }) => {
           className="flex items-center bg-gray-100 p-2 rounded-lg mb-2"
         >
           <Image
+            width={100}
+            height={100}
             src={image.previewURL}
             alt={image.name}
             className="w-16 h-auto rounded-lg mr-2"

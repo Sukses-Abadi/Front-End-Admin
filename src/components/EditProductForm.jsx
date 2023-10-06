@@ -603,6 +603,8 @@ export default function EditProductForm({ params }) {
                   {productGalleries?.map((item, index) => (
                     <div key={index} className="relative">
                       <Image
+                        width={200}
+                        height={200}
                         src={`http://localhost:5000/${item.photo}`}
                         alt={`Product Image ${index + 1}`}
                         className="max-w-full h-auto"

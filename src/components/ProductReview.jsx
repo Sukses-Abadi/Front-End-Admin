@@ -322,6 +322,8 @@ export default function ProductReview({ params }) {
                       {review.image && (
                         <div>
                           <Image
+                            width={100}
+                            height={100}
                             src={`http://localhost:5000/${review.image}`}
                             className="w-1/4 h-1/4"
                             onError={(e) => {
@@ -336,6 +338,8 @@ export default function ProductReview({ params }) {
                       {review.user.photo && (
                         <div>
                           <Image
+                            width={100}
+                            height={100}
                             src={`http://localhost:5000/${review.user.photo}`}
                             className="w-9 h-9 mr-2.5 rounded-full"
                             onError={(e) => {

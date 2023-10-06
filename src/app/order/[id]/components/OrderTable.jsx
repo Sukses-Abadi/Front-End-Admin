@@ -35,7 +35,7 @@ export default function OrderTable({ data }) {
             return (
               <tr key={product.id}>
                 <td className=" items-center  flex font-mono font-semibold py-8 border-b-2">
-                  <Link href={`/products/${product.id}`} className="flex">
+                  <Link href={`/products/${product.id}/edit`} className="flex">
                     <Image
                       className="px-3"
                       src={photoUrl}

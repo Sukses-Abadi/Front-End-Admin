@@ -22,7 +22,7 @@ export default async function Home() {
   );
   const todayIncome = data.orders
     .filter((order) => order.created_at.startsWith(todayDate))
-    .map((income) => income.total_payment)
+    .map((income) => income.total_price)
     .reduce((acc, currVal) => acc + currVal, 0);
 
   function formatCurrency(todayIncome) {
@@ -60,8 +60,8 @@ export default async function Home() {
               <p className="py-6">
                 Sukses-Abadi stands for more than just success. it represents a
                 timeless commitment to excellence. It symbolizes the unwavering
-                pursuit of one's dreams and aspirations, crafting a legacy that
-                will endure through the ages. Sukses-Abadi stands for
+                pursuit of one&apos;s dreams and aspirations, crafting a legacy
+                that will endure through the ages. Sukses-Abadi stands for
                 innovation, determination, and the courage to take on new
                 challenges.
               </p>
