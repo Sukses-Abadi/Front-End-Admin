@@ -322,10 +322,9 @@ export default function ProductReview({ params }) {
                       {review.image && (
                         <div>
                           <Image
-                            width={100}
-                            height={100}
+                            width={150}
+                            height={150}
                             src={`http://localhost:5000/${review.image}`}
-                            className="w-1/4 h-1/4"
                             onError={(e) => {
                               e.target.style.display = "none";
                             }}
