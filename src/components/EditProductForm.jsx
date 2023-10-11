@@ -190,7 +190,7 @@ export default function EditProductForm({ params }) {
   useEffect(() => {
     fetchProduct();
     fetchCategories();
-  }, [id]);
+  }, [id, fetchProduct]);
 
   if (!productLoaded) {
     return <div className="ml-2 mt-2">Loading...</div>;

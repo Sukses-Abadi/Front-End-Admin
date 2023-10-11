@@ -67,7 +67,7 @@ export default function Page() {
             Sign In
           </button>
           <p className="mt-4 text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a
               className="text-blue-600 underline cursor-pointer"
               href="/register"

@@ -217,6 +217,7 @@ export default function ProductTable() {
     setIsFilterButtonsChecked(filterButtonsChecked);
     setSelectedCheckboxes({});
   }, [
+    queryParams,
     itemsPerPage,
     currentPage,
     searchBar,
