@@ -21,12 +21,14 @@ export default function ProductReview({ params }) {
   const [reviewLoaded, setReviewLoaded] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState({});
 
-  const queryParams = {
-    product_id: productId,
-    limit: itemsPerPage,
-    page: currentPage,
-    rating: filteredRatings?.length === 0 ? null : filteredRatings,
-  };
+  const queryParams = useMemo(() => {
+    return {
+      product_id: productId,
+      limit: itemsPerPage,
+      page: currentPage,
+      rating: filteredRatings?.length === 0 ? null : filteredRatings,
+    };
+  }, [productId, itemsPerPage, currentPage, filteredRatings]);
 
   const fetchReviews = async (params) => {
     try {

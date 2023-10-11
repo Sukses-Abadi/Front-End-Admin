@@ -3,7 +3,7 @@
 import { getAllCategory } from "@/fetch/categories";
 import { deleteProduct, getAllProducts } from "@/fetch/products";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Swal from "sweetalert2";
@@ -37,25 +37,38 @@ export default function ProductTable() {
   const [isDropdownOpen, setIsDropdownOpen] = useState({});
   const router = useRouter();
 
-  const queryParams = {
-    id: null,
-    name: null,
-    SKU: null,
-    maxPrice: null,
-    minPrice: null,
-    restockStatus: filteredRestockStatus ? filteredRestockStatus : null,
-    discountStatus: filteredDiscountStatus ? filteredDiscountStatus : null,
-    limit: itemsPerPage,
-    page: currentPage,
-    sub_category_id:
-      filteredSubCategories?.length === 0 ? null : filteredSubCategories,
-    category_id: filteredCategories?.length === 0 ? null : filteredCategories,
-    rating: null,
-    averageRating: filteredRatings?.length === 0 ? null : filteredRatings,
-    q: searchBar,
-    sortBy: filteredSortBy,
-    sortOrder: filteredSortOrder,
-  };
+  const queryParams = useMemo(() => {
+    return {
+      id: null,
+      name: null,
+      SKU: null,
+      maxPrice: null,
+      minPrice: null,
+      restockStatus: filteredRestockStatus ? filteredRestockStatus : null,
+      discountStatus: filteredDiscountStatus ? filteredDiscountStatus : null,
+      limit: itemsPerPage,
+      page: currentPage,
+      sub_category_id:
+        filteredSubCategories?.length === 0 ? null : filteredSubCategories,
+      category_id: filteredCategories?.length === 0 ? null : filteredCategories,
+      rating: null,
+      averageRating: filteredRatings?.length === 0 ? null : filteredRatings,
+      q: searchBar,
+      sortBy: filteredSortBy,
+      sortOrder: filteredSortOrder,
+    };
+  }, [
+    filteredRestockStatus,
+    filteredDiscountStatus,
+    itemsPerPage,
+    currentPage,
+    filteredSubCategories,
+    filteredCategories,
+    filteredRatings,
+    searchBar,
+    filteredSortBy,
+    filteredSortOrder,
+  ]);
 
   const fetchProducts = async (params) => {
     try {

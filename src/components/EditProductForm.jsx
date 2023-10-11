@@ -8,7 +8,7 @@ import { addProductImage, deleteProductImage } from "@/fetch/productGalleries";
 import { getSingleProduct, updateProduct } from "@/fetch/products";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function EditProductForm({ params }) {
@@ -41,7 +41,7 @@ export default function EditProductForm({ params }) {
 
   const router = useRouter();
 
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       const product = await getSingleProduct(id);
 
@@ -60,7 +60,7 @@ export default function EditProductForm({ params }) {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [id]);
 
   const fetchCategories = async () => {
     try {
@@ -313,6 +313,7 @@ export default function EditProductForm({ params }) {
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="0"
                   onChange={(e) => {
+                    e.preventDefault();
                     const inputValue = e.target.value;
                     const numericValue =
                       isNaN(parseInt(inputValue)) || parseInt(inputValue) < 0
@@ -338,6 +339,7 @@ export default function EditProductForm({ params }) {
                   className="shadow-lg-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent block w-full p-2.5"
                   placeholder="0"
                   onChange={(e) => {
+                    e.preventDefault();
                     const inputValue = e.target.value;
                     const numericValue =
                       isNaN(parseInt(inputValue)) || parseInt(inputValue) <= 0
@@ -425,6 +427,7 @@ export default function EditProductForm({ params }) {
                                 className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                                 placeholder="0"
                                 onChange={(e) => {
+                                  e.preventDefault();
                                   {
                                     const inputValue = e.target.value;
                                     const numericValue =
@@ -453,7 +456,9 @@ export default function EditProductForm({ params }) {
                                 className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                                 placeholder="0"
                                 onChange={(e) => {
+                                  e.preventDefault();
                                   {
+                                    e.preventDefault();
                                     const inputValue = e.target.value;
                                     const numericValue =
                                       isNaN(parseInt(inputValue)) ||
@@ -478,7 +483,8 @@ export default function EditProductForm({ params }) {
                               <button
                                 type="button"
                                 className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-red-400 to-error shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.preventDefault();
                                   const updatedDetails = productDetails.filter(
                                     (_, prevIndex) => prevIndex !== index
                                   );
@@ -504,7 +510,10 @@ export default function EditProductForm({ params }) {
                             id="color"
                             className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="Black"
-                            onChange={(e) => setColor(e.target.value)}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setColor(e.target.value);
+                            }}
                           />
                         </td>
                         <td>
@@ -512,7 +521,10 @@ export default function EditProductForm({ params }) {
                             name="size"
                             id="size"
                             className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent px-2.5 my-1"
-                            onChange={(e) => setSize(e.target.value)}
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setSize(e.target.value);
+                            }}
                           >
                             <option value="S">S</option>
                             <option value="M">M</option>
@@ -528,6 +540,7 @@ export default function EditProductForm({ params }) {
                             className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="0"
                             onChange={(e) => {
+                              e.preventDefault();
                               const inputValue = e.target.value;
                               const numericValue =
                                 isNaN(parseInt(inputValue)) ||
@@ -547,6 +560,7 @@ export default function EditProductForm({ params }) {
                             className="input-sm w-full border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-accent p-2.5 my-1"
                             placeholder="0"
                             onChange={(e) => {
+                              e.preventDefault();
                               const inputValue = e.target.value;
                               const numericValue =
                                 isNaN(parseInt(inputValue)) ||
@@ -562,7 +576,8 @@ export default function EditProductForm({ params }) {
                           <button
                             type="button"
                             className="text-white font-medium text-sm px-2.5 py-0.5 my-0.5  text-center rounded-lg bg-gradient-to-br from-orange-300 to-accent shadow-sm shadow-gray-300 hover:scale-[1.02] transition-transform"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.preventDefault();
                               setProductDetails((prevDetails) => [
                                 ...prevDetails,
                                 {
@@ -609,9 +624,10 @@ export default function EditProductForm({ params }) {
                         alt={`Product Image ${index + 1}`}
                         className="max-w-full h-auto"
                       />
-                      <button
+                      <div
                         className="absolute top-2 right-2 p-1 text-white rounded-full bg-gradient-to-br from-red-400 to-error shadow-md shadow-gray-300 hover:scale-[1.02]"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
                           const updatedProductGalleries = [...productGalleries];
 
                           updatedProductGalleries.splice(index, 1);
@@ -632,7 +648,7 @@ export default function EditProductForm({ params }) {
                             clipRule="evenodd"
                           />
                         </svg>
-                      </button>
+                      </div>
                     </div>
                   ))}
                 </div>
