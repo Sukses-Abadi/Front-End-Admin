@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteReview, getAllReviews } from "@/fetch/reviews";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Swal from "sweetalert2";
 import Image from "next/image";
