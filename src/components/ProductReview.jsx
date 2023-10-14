@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteReview, getAllReviews } from "@/fetch/reviews";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import Swal from "sweetalert2";
 import Image from "next/image";
@@ -326,7 +326,7 @@ export default function ProductReview({ params }) {
                           <Image
                             width={150}
                             height={150}
-                            src={`http://localhost:5000/${review.image}`}
+                            src={review.image}
                             onError={(e) => {
                               e.target.style.display = "none";
                             }}
@@ -341,7 +341,7 @@ export default function ProductReview({ params }) {
                           <Image
                             width={100}
                             height={100}
-                            src={`http://localhost:5000/${review.user.photo}`}
+                            src={review.user.photo}
                             className="w-9 h-9 mr-2.5 rounded-full"
                             onError={(e) => {
                               e.target.style.display = "none";

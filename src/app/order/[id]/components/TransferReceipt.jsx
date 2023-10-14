@@ -56,10 +56,8 @@ export default function TransferReceipt({ data }) {
           <div className="flex items-center justify-center">
             <Image
               className="w-auto h-auto"
-              onClick={() =>
-                router.push(`http://localhost:5000/${data.payment_receipt}`)
-              }
-              src={`http://localhost:5000/${data.payment_receipt}`}
+              onClick={() => router.push(data.payment_receipt)}
+              src={data.payment_receipt}
               alt={data.payment_receipt}
               height={200}
               width={200}

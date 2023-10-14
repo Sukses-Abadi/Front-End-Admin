@@ -34,14 +34,14 @@ export default function OrderTable({ data }) {
             const qty = product.quantity;
             const name = productDetails.product.name;
             const { photo } = productDetails.product.productGalleries[0];
-            const photoUrl = `http://localhost:5000/${photo}`;
+
             return (
               <tr key={product.id}>
                 <td className=" items-center  flex font-mono font-semibold py-8 border-b-2">
                   <Link href={`/products/${product.id}/edit`} className="flex">
                     <Image
                       className="px-3"
-                      src={photoUrl}
+                      src={photo}
                       alt=""
                       width={100}
                       height={100}

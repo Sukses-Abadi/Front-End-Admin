@@ -620,7 +620,7 @@ export default function EditProductForm({ params }) {
                       <Image
                         width={200}
                         height={200}
-                        src={`http://localhost:5000/${item.photo}`}
+                        src={item.photo}
                         alt={`Product Image ${index + 1}`}
                         className="max-w-full h-auto"
                       />
